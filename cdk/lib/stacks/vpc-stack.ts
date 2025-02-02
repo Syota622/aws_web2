@@ -27,8 +27,8 @@ export class VpcStack extends cdk.Stack {
         },
       ],
       
-      // // NAT Gatewayの設定
-      // natGateways: 1,
+      // EIPとNAT Gatewayを無効化
+      natGateways: 0,
     });
   }
 }
