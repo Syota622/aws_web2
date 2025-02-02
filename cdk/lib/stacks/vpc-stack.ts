@@ -29,6 +29,8 @@ export class VpcStack extends cdk.Stack {
       
       // EIPとNAT Gatewayを無効化
       natGateways: 0,
+      // デフォルトセキュリティグループの制限を無効化(インバウンド、アウトバウンドの削除)
+      restrictDefaultSecurityGroup: true
     });
   }
 }
