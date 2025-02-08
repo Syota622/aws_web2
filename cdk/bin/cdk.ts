@@ -13,6 +13,7 @@ const projectName = process.env.PROJECT_NAME || 'learn';
 const envName = process.env.ENV_NAME || 'prod';
 
 // CloudFormationスタック作成
+// VpcStack-learn-prodが、スタック名となる
 new VpcStack(app, `VpcStack-${projectName}-${envName}`, {
   projectName,
   envName,
