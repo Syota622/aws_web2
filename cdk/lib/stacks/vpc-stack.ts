@@ -18,8 +18,14 @@ export class VpcStack extends cdk.Stack {
 
     // VPCの作成
     this.vpc = new ec2.Vpc(this, resourceName, {
+      // VPCのCIDRブロックを設定
       ipAddresses: ec2.IpAddresses.cidr('10.0.0.0/16'),
+
+      // 最大AZ数を設定
       maxAzs: 2,
+
+      // VPC名を設定
+      vpcName: resourceName,
       
       subnetConfiguration: [
         {
@@ -40,6 +46,7 @@ export class VpcStack extends cdk.Stack {
 
       // デフォルトセキュリティグループの制限を無効化(インバウンド、アウトバウンドの削除)
       restrictDefaultSecurityGroup: false,
+      
     });
   }
 }
