@@ -13,8 +13,10 @@ export class VpcStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: VpcStackProps) {
     super(scope, id, props);
 
+    // リソース名に環境変数を反映
     const resourceName = `vpc-${props.projectName}-${props.envName}`;
 
+    // VPCの作成
     this.vpc = new ec2.Vpc(this, resourceName, {
       ipAddresses: ec2.IpAddresses.cidr('10.0.0.0/16'),
       maxAzs: 2,
