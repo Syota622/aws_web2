@@ -27,6 +27,8 @@ export class VpcStack extends cdk.Stack {
       // VPC名を設定（設定をしない場合、CloudFormationスタック名がVPC名となる）
       vpcName: resourceName,
       
+      // サブネットなどに名前を付与したい場合は下記記事を参照
+      // https://blog.future.ad.jp/aws-cdk-v2-%E3%81%A7vpc%E3%82%92%E8%87%AA%E5%88%86%E5%A5%BD%E3%81%BF%E3%81%AB-%E3%81%9D%E3%81%AE%E3%81%AB
       subnetConfiguration: [
         {
           // サブネット名にも環境変数を反映
