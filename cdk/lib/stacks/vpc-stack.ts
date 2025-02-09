@@ -24,7 +24,7 @@ export class VpcStack extends cdk.Stack {
       // 最大AZ数を設定
       maxAzs: 2,
 
-      // VPC名を設定
+      // VPC名を設定（設定をしない場合、CloudFormationスタック名がVPC名となる）
       vpcName: resourceName,
       
       subnetConfiguration: [
