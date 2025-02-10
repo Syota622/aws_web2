@@ -3,6 +3,7 @@ import 'source-map-support/register';
 import * as dotenv from 'dotenv';
 import * as cdk from 'aws-cdk-lib';
 import { VpcStack } from '../lib/stacks/vpc-stack';
+import { S3Stack } from '../lib/stacks/s3-stack';
 
 // .envファイルの読み込み
 dotenv.config();
@@ -15,6 +16,16 @@ const envName = process.env.ENV_NAME || 'prod';
 // CloudFormationスタック作成
 // VpcStack-learn-prodが、スタック名となる
 new VpcStack(app, `VpcStack-${projectName}-${envName}`, {
+  projectName,
+  envName,
+  env: {
+    account: process.env.CDK_DEFAULT_ACCOUNT,
+    region: process.env.CDK_DEFAULT_REGION,
+  },
+});
+
+// S3スタック
+new S3Stack(app, `S3Stack-${projectName}-${envName}`, {
   projectName,
   envName,
   env: {
