@@ -20,9 +20,18 @@ export class S3Stack extends cdk.Stack {
     this.bucket = new s3.Bucket(this, bucketName, {
       // バケット名を指定
       bucketName: bucketName,
+      // // ウェブサイトホスティングを有効化
+      // websiteIndexDocument: 'index.html',
+      // websiteErrorDocument: 'error.html',
       
-      // パブリックアクセスをブロック
-      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      // パブリックアクセスを許可
+      publicReadAccess: true,
+      blockPublicAccess: new s3.BlockPublicAccess({
+        blockPublicAcls: false,
+        blockPublicPolicy: false,
+        ignorePublicAcls: false,
+        restrictPublicBuckets: false
+      }),
       
       // バージョニングを有効化
       versioned: true,
@@ -38,5 +47,11 @@ export class S3Stack extends cdk.Stack {
       // autoDeleteObjectsはREMOVAL_POLICYがDESTROYの場合のみ使用可能
       autoDeleteObjects: true,
     });
+
+    // // アウトプットの追加
+    // new cdk.CfnOutput(this, 'BucketWebsiteUrl', {
+    //   value: this.bucket.bucketWebsiteUrl,
+    //   description: 'The URL of the website',
+    // });
   }
 }
