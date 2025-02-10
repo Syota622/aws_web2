@@ -20,9 +20,9 @@ export class S3Stack extends cdk.Stack {
     this.bucket = new s3.Bucket(this, bucketName, {
       // バケット名を指定
       bucketName: bucketName,
-      // // ウェブサイトホスティングを有効化
-      // websiteIndexDocument: 'index.html',
-      // websiteErrorDocument: 'error.html',
+      // ウェブサイトホスティングを有効化
+      websiteIndexDocument: 'index.html',
+      websiteErrorDocument: 'error.html',
       
       // パブリックアクセスを許可
       publicReadAccess: true,
@@ -48,10 +48,10 @@ export class S3Stack extends cdk.Stack {
       autoDeleteObjects: true,
     });
 
-    // // アウトプットの追加
-    // new cdk.CfnOutput(this, 'BucketWebsiteUrl', {
-    //   value: this.bucket.bucketWebsiteUrl,
-    //   description: 'The URL of the website',
-    // });
+    // アウトプットの追加
+    new cdk.CfnOutput(this, 'BucketWebsiteUrl', {
+      value: this.bucket.bucketWebsiteUrl,
+      description: 'The URL of the website',
+    });
   }
 }
