@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import * as cdk from 'aws-cdk-lib';
 import { VpcStack } from '../lib/stacks/vpc-stack';
 import { S3Stack } from '../lib/stacks/s3-stack';
+import { ApiStack } from '../lib/stacks/api-stack';
 
 // .envファイルの読み込み
 dotenv.config();
@@ -26,6 +27,15 @@ new VpcStack(app, `VpcStack-${projectName}-${envName}`, {
 
 // S3スタック
 new S3Stack(app, `S3Stack-${projectName}-${envName}`, {
+  projectName,
+  envName,
+  env: {
+    account: process.env.CDK_DEFAULT_ACCOUNT,
+    region: process.env.CDK_DEFAULT_REGION,
+  },
+});
+
+new ApiStack(app, `ApiStack-${projectName}-${envName}`, {
   projectName,
   envName,
   env: {
