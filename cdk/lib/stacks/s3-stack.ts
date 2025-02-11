@@ -14,7 +14,7 @@ export class S3Stack extends cdk.Stack {
     super(scope, id, props);
 
     // バケット名を定義
-    const bucketName = `${props.projectName}-bucket-${props.envName}`;
+    const bucketName = `${props.projectName}-bucket-shota-${props.envName}`;
 
     // S3バケットの作成
     this.bucket = new s3.Bucket(this, bucketName, {
