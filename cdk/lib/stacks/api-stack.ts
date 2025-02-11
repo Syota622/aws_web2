@@ -14,8 +14,8 @@ export class ApiStack extends cdk.Stack {
     super(scope, id, props);
 
     // REST APIの作成
-    this.api = new apigateway.RestApi(this, `api-${props.projectName}-${props.envName}`, {
-      restApiName: `api-${props.projectName}-${props.envName}`,
+    this.api = new apigateway.RestApi(this, `${props.projectName}-api-${props.envName}`, {
+      restApiName: `${props.projectName}-api-${props.envName}`,
       description: 'Test API Gateway',
       deployOptions: {
         stageName: props.envName,
