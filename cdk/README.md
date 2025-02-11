@@ -6,3 +6,4 @@
 - cdk diff
 - cdk deploy --context env=dev
 - cdk deploy --context env=prod
+- cdk list
