@@ -25,7 +25,7 @@ export class S3Stack extends cdk.Stack {
       websiteErrorDocument: 'error.html',
       
       // パブリックリードアクセスのバケットポリシーを設定
-      publicReadAccess: true,
+      publicReadAccess: false,
 
       // ブロックパブリックアクセスを無効化
       blockPublicAccess: new s3.BlockPublicAccess({
