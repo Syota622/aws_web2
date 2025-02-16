@@ -18,31 +18,39 @@ export class CloudFrontStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
     super(scope, id, props);
 
-    // API Gateway用のオリジンリクエストポリシー
+    // カスタムオリジンリクエストポリシーの作成
     const apiOriginRequestPolicy = new cloudfront.OriginRequestPolicy(this, 'ApiOriginRequestPolicy', {
       originRequestPolicyName: `${props.projectName}-${props.envName}-api-policy`,
       headerBehavior: cloudfront.OriginRequestHeaderBehavior.all(),
       queryStringBehavior: cloudfront.OriginRequestQueryStringBehavior.all(),
     });
 
+    // APIエンドポイントとS3のオリジンを作成
+    const apiOrigin = new origins.RestApiOrigin(props.api);
+    const s3Origin = new origins.S3Origin(props.websiteBucket);
+
     this.distribution = new cloudfront.Distribution(this, `cf-${props.projectName}-${props.envName}`, {
-      // S3用のデフォルトビヘイビア
+      // 最初にAPI Gateway向けのビヘイビアを設定
       defaultBehavior: {
-        origin: new origins.S3Origin(props.websiteBucket),
-        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
-        cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
+        origin: apiOrigin,
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
+        allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+        cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+        originRequestPolicy: apiOriginRequestPolicy,
       },
-      // API Gateway用のビヘイビア
+      // S3向けのビヘイビアを追加
       additionalBehaviors: {
-        'api/*': {  // APIパスを'api/*'に変更
-          origin: new origins.RestApiOrigin(props.api, {
-            originPath: `/${props.envName}`,  // ステージ名を設定
-          }),
-          viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
-          allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
-          cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
-          originRequestPolicy: apiOriginRequestPolicy,
+        '/*.html': {
+          origin: s3Origin,
+          viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+          allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
+          cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
+        },
+        '/': {
+          origin: s3Origin,
+          viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+          allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
+          cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
         }
       },
       defaultRootObject: 'index.html',
