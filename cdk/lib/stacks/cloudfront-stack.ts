@@ -18,37 +18,34 @@ export class CloudFrontStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
     super(scope, id, props);
 
+    // API Gateway用のオリジンリクエストポリシー
+    const apiOriginRequestPolicy = new cloudfront.OriginRequestPolicy(this, 'ApiOriginRequestPolicy', {
+      originRequestPolicyName: `${props.projectName}-${props.envName}-api-policy`,
+      headerBehavior: cloudfront.OriginRequestHeaderBehavior.all(),
+      queryStringBehavior: cloudfront.OriginRequestQueryStringBehavior.all(),
+    });
+
     this.distribution = new cloudfront.Distribution(this, `cf-${props.projectName}-${props.envName}`, {
-      // デフォルトのビヘイビア（S3向け）
+      // S3用のデフォルトビヘイビア
       defaultBehavior: {
         origin: new origins.S3Origin(props.websiteBucket),
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
         cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
       },
-      // API Gateway向けのビヘイビア
+      // API Gateway用のビヘイビア
       additionalBehaviors: {
-        '/prod/test': {  // 具体的なパスパターンを指定
-          origin: new origins.RestApiOrigin(props.api),
+        'api/*': {  // APIパスを'api/*'に変更
+          origin: new origins.RestApiOrigin(props.api, {
+            originPath: `/${props.envName}`,  // ステージ名を設定
+          }),
           viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
           allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
           cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
-          originRequestPolicy: cloudfront.OriginRequestPolicy.ALL_VIEWER,
+          originRequestPolicy: apiOriginRequestPolicy,
         }
       },
       defaultRootObject: 'index.html',
-      errorResponses: [
-        {
-          httpStatus: 403,
-          responseHttpStatus: 200,
-          responsePagePath: '/index.html',
-        },
-        {
-          httpStatus: 404,
-          responseHttpStatus: 200,
-          responsePagePath: '/index.html',
-        },
-      ],
     });
 
     new cdk.CfnOutput(this, 'DistributionDomainName', {
