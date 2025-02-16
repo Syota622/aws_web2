@@ -5,7 +5,6 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
 
-// CloudFrontStackPropsは、CloudFrontStackのプロパティを定義するインターフェース
 interface CloudFrontStackProps extends cdk.StackProps {
   projectName: string;
   envName: string;
@@ -19,20 +18,22 @@ export class CloudFrontStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
     super(scope, id, props);
 
-    // CloudFront Distributionの作成
     this.distribution = new cloudfront.Distribution(this, `cf-${props.projectName}-${props.envName}`, {
+      // デフォルトのビヘイビア（S3向け）
       defaultBehavior: {
         origin: new origins.S3Origin(props.websiteBucket),
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
         cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
       },
+      // API Gateway向けのビヘイビア
       additionalBehaviors: {
-        '/prod/*': {
+        '/prod/test': {  // 具体的なパスパターンを指定
           origin: new origins.RestApiOrigin(props.api),
           viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
           allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
-          cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
+          cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+          originRequestPolicy: cloudfront.OriginRequestPolicy.ALL_VIEWER,
         }
       },
       defaultRootObject: 'index.html',
@@ -50,7 +51,6 @@ export class CloudFrontStack extends cdk.Stack {
       ],
     });
 
-    // CloudFront URLを出力
     new cdk.CfnOutput(this, 'DistributionDomainName', {
       value: this.distribution.distributionDomainName,
       description: 'CloudFront Distribution Domain Name',
