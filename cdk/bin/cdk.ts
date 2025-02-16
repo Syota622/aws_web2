@@ -5,8 +5,8 @@ import * as cdk from 'aws-cdk-lib';
 import { VpcStack } from '../lib/stacks/vpc-stack';
 import { S3Stack } from '../lib/stacks/s3-stack';
 import { ApiStack } from '../lib/stacks/api-stack';
+import { CloudFrontStack } from '../lib/stacks/cloudfront-stack';
 
-// .envファイルの読み込み
 dotenv.config();
 
 const app = new cdk.App();
@@ -14,32 +14,22 @@ const app = new cdk.App();
 const projectName = process.env.PROJECT_NAME || 'learn';
 const envName = process.env.ENV_NAME || 'prod';
 
-// CloudFormationスタック作成
-// VpcStack-learn-prodが、スタック名となる
-new VpcStack(app, `VpcStack-${projectName}-${envName}`, {
+const commonProps = {
   projectName,
   envName,
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: process.env.CDK_DEFAULT_REGION,
   },
-});
+};
 
-// S3スタック
-new S3Stack(app, `S3Stack-${projectName}-${envName}`, {
-  projectName,
-  envName,
-  env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: process.env.CDK_DEFAULT_REGION,
-  },
-});
+const vpcStack = new VpcStack(app, `VpcStack-${projectName}-${envName}`, commonProps);
+const s3Stack = new S3Stack(app, `S3Stack-${projectName}-${envName}`, commonProps);
+const apiStack = new ApiStack(app, `ApiStack-${projectName}-${envName}`, commonProps);
 
-new ApiStack(app, `ApiStack-${projectName}-${envName}`, {
-  projectName,
-  envName,
-  env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: process.env.CDK_DEFAULT_REGION,
-  },
+// CloudFrontスタックに必要な依存リソースを渡す
+new CloudFrontStack(app, `CloudFrontStack-${projectName}-${envName}`, {
+  ...commonProps,
+  websiteBucket: s3Stack.bucket,
+  api: apiStack.api,
 });
