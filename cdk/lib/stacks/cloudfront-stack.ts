@@ -26,31 +26,25 @@ export class CloudFrontStack extends cdk.Stack {
     });
 
     // APIエンドポイントとS3のオリジンを作成
-    const apiOrigin = new origins.RestApiOrigin(props.api);
+    const apiOrigin = new origins.RestApiOrigin(props.api, {
+      originPath: '/prod'  // ステージ名を追加
+    });
     const s3Origin = new origins.S3Origin(props.websiteBucket);
 
     this.distribution = new cloudfront.Distribution(this, `cf-${props.projectName}-${props.envName}`, {
-      // 最初にAPI Gateway向けのビヘイビアを設定
       defaultBehavior: {
-        origin: apiOrigin,
-        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
-        allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
-        cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
-        originRequestPolicy: apiOriginRequestPolicy,
+        origin: s3Origin,  // デフォルトをS3に変更
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
+        cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
       },
-      // S3向けのビヘイビアを追加
       additionalBehaviors: {
-        '/*.html': {
-          origin: s3Origin,
-          viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-          allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
-          cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
-        },
-        '/': {
-          origin: s3Origin,
-          viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-          allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
-          cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
+        '/api/*': {  // APIパスパターンを追加
+          origin: apiOrigin,
+          viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
+          allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+          cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+          originRequestPolicy: apiOriginRequestPolicy,
         }
       },
       defaultRootObject: 'index.html',
