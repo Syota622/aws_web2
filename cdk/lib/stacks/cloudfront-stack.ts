@@ -39,7 +39,7 @@ export class CloudFrontStack extends cdk.Stack {
         cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
       },
       additionalBehaviors: {
-        '/api/*': {  // APIパスパターンを追加
+        'api/*': {  // 先頭のスラッシュを削除
           origin: apiOrigin,
           viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
           allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
