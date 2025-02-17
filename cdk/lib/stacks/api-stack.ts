@@ -28,6 +28,29 @@ export class ApiStack extends cdk.Stack {
       },
     });
 
+    // ルートパスにGETメソッドを追加
+    this.api.root.addMethod('GET', new apigateway.MockIntegration({
+      integrationResponses: [{
+        statusCode: '200',
+        responseTemplates: {
+          'application/json': JSON.stringify({
+            message: 'Hello from API Gateway Root!',
+            timestamp: '$context.requestTime'
+          })
+        },
+      }],
+      requestTemplates: {
+        'application/json': '{ "statusCode": 200 }'
+      }
+    }), {
+      methodResponses: [{
+        statusCode: '200',
+        responseModels: {
+          'application/json': apigateway.Model.EMPTY_MODEL,
+        },
+      }]
+    });
+
     // /test エンドポイントの作成
     const testResource = this.api.root.addResource('test');
     
