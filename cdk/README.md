@@ -13,4 +13,4 @@ aws s3 cp ../frontend/index.html s3://learn-bucket-shota-prod/
 aws s3 cp ../frontend/error.html s3://learn-bucket-shota-prod/
 
 # aws cli 
-aws cloudfront create-invalidation --distribution-id E1P3OMDZW1MQFB --paths "/*"\n
+aws cloudfront create-invalidation --distribution-id E1P3OMDZW1MQFB --paths "/*"
