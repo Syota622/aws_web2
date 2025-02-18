@@ -18,27 +18,6 @@ export class CloudFrontStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
     super(scope, id, props);
 
-    // CloudFront Function for URL rewriting
-    const urlRewriteFunction = new cloudfront.Function(this, 'UrlRewriteFunction', {
-      code: cloudfront.FunctionCode.fromInline(`
-        function handler(event) {
-          var request = event.request;
-          var uri = request.uri;
-          
-          // For root path, return index.html
-          if (uri === '/') {
-            request.uri = '/index.html';
-          }
-          // For API paths, rewrite to prod/
-          else if (uri.startsWith('/api/')) {
-            request.uri = uri.replace('/api/', '/prod/');
-          }
-          
-          return request;
-        }
-      `)
-    });
-
     // カスタムオリジンリクエストポリシーの作成
     const apiOriginRequestPolicy = new cloudfront.OriginRequestPolicy(this, 'ApiOriginRequestPolicy', {
       originRequestPolicyName: `${props.projectName}-${props.envName}-api-policy`,
@@ -47,33 +26,30 @@ export class CloudFrontStack extends cdk.Stack {
     });
 
     // APIエンドポイントとS3のオリジンを作成
-    const apiOrigin = new origins.RestApiOrigin(props.api);
+    const apiOrigin = new origins.RestApiOrigin(props.api, {
+      originPath: `/${props.envName}`  // ステージ名を追加
+    });
     const s3Origin = new origins.S3Origin(props.websiteBucket);
 
     this.distribution = new cloudfront.Distribution(this, `cf-${props.projectName}-${props.envName}`, {
+      // S3用のデフォルトビヘイビア
       defaultBehavior: {
         origin: s3Origin,
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
         cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
-        functionAssociations: [{
-          function: urlRewriteFunction,
-          eventType: cloudfront.FunctionEventType.VIEWER_REQUEST
-        }]
       },
+      // API Gateway用のビヘイビア
       additionalBehaviors: {
-        'api/*': {
+        // パスパターンを修正
+        '/api*': {  // ワイルドカードの前のスラッシュを削除
           origin: apiOrigin,
           viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
           allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
           cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
           originRequestPolicy: apiOriginRequestPolicy,
-          functionAssociations: [{
-            function: urlRewriteFunction,
-            eventType: cloudfront.FunctionEventType.VIEWER_REQUEST
-          }]
         }
-      },
+      }
     });
 
     new cdk.CfnOutput(this, 'DistributionDomainName', {
