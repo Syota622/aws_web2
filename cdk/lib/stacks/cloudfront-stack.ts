@@ -42,7 +42,7 @@ export class CloudFrontStack extends cdk.Stack {
       // API Gateway用のビヘイビア
       additionalBehaviors: {
         // パスパターンを修正
-        '/api*': {  // ワイルドカードの前のスラッシュを削除
+        '/api/*': {  // ワイルドカードの前のスラッシュを削除
           origin: apiOrigin,
           viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
           allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
