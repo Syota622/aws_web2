@@ -21,7 +21,7 @@ export class CloudFrontStack extends cdk.Stack {
     // カスタムオリジンリクエストポリシーの作成
     const apiOriginRequestPolicy = new cloudfront.OriginRequestPolicy(this, 'ApiOriginRequestPolicy', {
       originRequestPolicyName: `${props.projectName}-${props.envName}-api-policy`,
-      headerBehavior: cloudfront.OriginRequestHeaderBehavior.all(),
+      headerBehavior: cloudfront.OriginRequestHeaderBehavior.none(),
       queryStringBehavior: cloudfront.OriginRequestQueryStringBehavior.all(),
     });
 
