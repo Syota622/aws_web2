@@ -6,7 +6,6 @@ import { VpcStack } from '../lib/stacks/vpc-stack';
 import { S3Stack } from '../lib/stacks/s3-stack';
 import { ApiStack } from '../lib/stacks/api-stack';
 import { CloudFrontStack } from '../lib/stacks/cloudfront-stack';
-import { CloudFrontStack2 } from '../lib/stacks/cloudfront-stack2';
 
 dotenv.config();
 
@@ -30,12 +29,6 @@ const apiStack = new ApiStack(app, `ApiStack-${projectName}-${envName}`, commonP
 
 // CloudFrontスタックに必要な依存リソースを渡す
 new CloudFrontStack(app, `CloudFrontStack-${projectName}-${envName}`, {
-  ...commonProps,
-  websiteBucket: s3Stack.bucket,
-  api: apiStack.api,
-});
-
-new CloudFrontStack2(app, `CloudFrontStack2-${projectName}-${envName}`, {
   ...commonProps,
   websiteBucket: s3Stack.bucket,
   api: apiStack.api,
