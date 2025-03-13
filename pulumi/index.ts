@@ -3,7 +3,7 @@ import { Vpc } from "./src/network/vpc";
 
 // 設定を取得
 const config = new pulumi.Config();
-const projectName = config.get("projectName") || "pulumi-aws-infra";
+const projectName = config.get("projectName") || "pulumi";
 
 // 環境変数を取得（または設定）
 const env = config.get("environment") || "dev";
