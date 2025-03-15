@@ -24,5 +24,5 @@ stackの出力
 3. 問題なければ pulumi up を実行
 
 # コードチェック
+- tsc --noEmit
 TypeScriptは型チェックのみを実行し、JavaScriptファイルの生成を行いません。
-tsc --noEmit
