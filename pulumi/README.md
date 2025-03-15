@@ -26,3 +26,6 @@ stackの出力
 # コードチェック
 - tsc --noEmit
 TypeScriptは型チェックのみを実行し、JavaScriptファイルの生成を行いません。
+
+- npm install --save-dev @eslint/js globals @typescript-eslint/parser @typescript-eslint/eslint-plugin
+eslintをインストール。現状では利用してない
