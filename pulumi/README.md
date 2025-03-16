@@ -18,6 +18,12 @@ stackのデプロイ
 - pulumi stack output
 stackの出力
 
+- pulumi destroy
+AWSリソースの削除
+
+- pulumi stack rm dev
+stackの削除
+
 # ワークフロー
 1. コードの変更を行う
 2. pulumi preview で計画を確認
