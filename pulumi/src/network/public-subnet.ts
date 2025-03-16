@@ -1,9 +1,9 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 
-// サブネットの引数を定義するインターフェース
+// パブリックサブネットの引数を定義するインターフェース
 // TypeScriptのインターフェースは、オブジェクトの形状（どんなプロパティを持つか）を定義します
-export interface SubnetArgs {
+export interface PublicSubnetArgs {
     // VPCのID（必須）
     vpcId: pulumi.Input<string>;
     
@@ -13,7 +13,7 @@ export interface SubnetArgs {
     // 利用可能ゾーン（必須）- リージョン内の特定のデータセンター
     availabilityZone: string;
     
-    // パブリックIPを自動割り当てするかどうか（任意）
+    // パブリックIPを自動割り当てするかどうか（任意、デフォルトはtrue）
     // パブリックサブネットではtrueにします
     mapPublicIpOnLaunch?: boolean;
     
@@ -21,33 +21,35 @@ export interface SubnetArgs {
     tags?: { [key: string]: string };
 }
 
-// サブネットを作成するクラス
+// パブリックサブネットを作成するクラス
 // pulumi.ComponentResourceを継承して独自のカスタムリソースを定義
-export class Subnet extends pulumi.ComponentResource {
+export class PublicSubnet extends pulumi.ComponentResource {
     // このクラスのプロパティとしてサブネットリソースを公開
     public readonly subnet: aws.ec2.Subnet;
 
     // コンストラクタ - クラスのインスタンスを作成するときに呼ばれるメソッド
-    constructor(name: string, args: SubnetArgs, opts?: pulumi.ComponentResourceOptions) {
+    constructor(name: string, args: PublicSubnetArgs, opts?: pulumi.ComponentResourceOptions) {
         // 親クラスのコンストラクタを呼び出し、リソースタイプと名前を指定
-        super("custom:network:Subnet", name, {}, opts);
+        super("custom:network:PublicSubnet", name, {}, opts);
 
         // デフォルトのタグを準備
         const defaultTags = {
             Name: name,
-            ManagedBy: "Pulumi"
+            ManagedBy: "Pulumi",
+            Type: "Public" // パブリックサブネットであることを明示
         };
 
         // ユーザー指定のタグとデフォルトタグをマージ
         // スプレッド構文（...）を使って、オブジェクトの内容を展開
         const tags = { ...defaultTags, ...(args.tags || {}) };
 
-        // サブネットリソースを作成
+        // パブリックサブネットリソースを作成
         this.subnet = new aws.ec2.Subnet(name, {
             vpcId: args.vpcId,                           // どのVPCに属するか
             cidrBlock: args.cidrBlock,                   // IPアドレス範囲
             availabilityZone: args.availabilityZone,     // どのAZに配置するか
-            mapPublicIpOnLaunch: args.mapPublicIpOnLaunch || false, // パブリックIP自動割り当て
+            // パブリックIPを自動的に割り当てるかどうかを指定するプロパティ
+            mapPublicIpOnLaunch: args.mapPublicIpOnLaunch !== undefined ? args.mapPublicIpOnLaunch : true,
             tags: tags,                                  // タグ情報
         }, { parent: this }); // このリソースの親は現在のコンポーネント
 
