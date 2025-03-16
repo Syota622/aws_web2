@@ -1,14 +1,13 @@
-import { SSTConfig } from "sst";
-import { API } from "./stacks/MyStack";
+/// <reference path="./.sst/platform/config.d.ts" />
 
-export default {
-  config(_input) {
+export default $config({
+  app(input) {
     return {
       name: "sst",
-      region: "us-east-1",
+      removal: input?.stage === "production" ? "retain" : "remove",
+      protect: ["production"].includes(input?.stage),
+      home: "aws",
     };
   },
-  stacks(app) {
-    app.stack(API);
-  }
-} satisfies SSTConfig;
+  async run() {},
+});
