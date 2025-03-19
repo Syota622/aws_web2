@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@aws-sdk/client-ec2": "^3.767.0",
+    "@pulumi/aws": "^6.72.0"
+  }
+}

@@ -1,13 +1,27 @@
-/// <reference path="./.sst/platform/config.d.ts" />
+import { $config, Api } from "sst";
 
 export default $config({
   app(input) {
     return {
-      name: "sst",
-      removal: input?.stage === "production" ? "retain" : "remove",
-      protect: ["production"].includes(input?.stage),
-      home: "aws",
+      name: "my-api-app",
+      home: "aws"
     };
   },
-  async run() {},
+  async run({ app }) {
+    // APIを定義
+    const api = new Api(app, "MyApi", {
+      routes: {
+        "GET /": {
+          function: {
+            handler: "functions/hello.handler"
+          }
+        }
+      }
+    });
+
+    // 出力値を設定
+    app.outputs({
+      ApiEndpoint: api.url
+    });
+  }
 });

@@ -1,27 +1,34 @@
-import { StackContext } from "sst/constructs";
-import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 
-export function NetworkStack({ stack }: StackContext) {
-  // VPCリソースを作成
-  const vpc = new aws.ec2.Vpc("MainVpc", {
+// VPCスタック関数をエクスポート
+export function VpcStack() {
+  // プロジェクト名とステージ名を設定
+  const projectName = "sst";
+  const environment = "prod";
+  
+  // 共通タグを定義
+  const tags = {
+    Project: projectName,
+    Environment: environment,
+    ManagedBy: "SST",
+  };
+
+  // VPCを作成
+  const vpc = new aws.ec2.Vpc(`${projectName}-vpc-${environment}`, {
     cidrBlock: "10.0.0.0/16",
-    enableDnsSupport: true,
     enableDnsHostnames: true,
+    enableDnsSupport: true,
     tags: {
-      Name: `${stack.stage}-main-vpc`,
-      Environment: stack.stage,
-      ManagedBy: "SST",
+      ...tags,
+      Name: `${projectName}-vpc-${environment}`,
     },
   });
 
-  // VPC IDを出力
-  stack.addOutputs({
-    VpcId: vpc.id,
-    VpcArn: vpc.arn,
-    CidrBlock: vpc.cidrBlock,
-  });
+  // 出力を設定
+  $stack.output("VpcId", vpc.id);
+  $stack.output("VpcArn", vpc.arn);
+  $stack.output("VpcCidrBlock", vpc.cidrBlock);
 
-  // スタックから他の場所でも使えるように返す
+  // 他のリソースで使用できるようにVPCを返す
   return { vpc };
 }
