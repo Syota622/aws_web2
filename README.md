@@ -2,6 +2,7 @@
 
 # SST
 - git clone https://github.com/sst-example/sst-example.git
+- https://sst.dev/docs/set-up-a-monorepo/
 - cd sst-example
 - npm install
 - npx sst deploy --stage dev
