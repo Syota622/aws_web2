@@ -1,0 +1,12 @@
+{
+  "name": "@sst/functions",
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "@sst/core": "*",
+    "sst": "*"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8"
+  }
+}
