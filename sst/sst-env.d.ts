@@ -14,6 +14,9 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Bucket"
     }
+    "MyVpc": {
+      "type": "sst.aws.Vpc"
+    }
   }
 }
 /// <reference path="sst-env.d.ts" />
