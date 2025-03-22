@@ -2,7 +2,10 @@
 
 # SST
 - 資料
+  - リポジトリ
 https://sst.dev/docs/set-up-a-monorepo/
+  - コンソール
+https://sst.dev/docs/console/
 
 - git clone https://github.com/sst-example/sst-example.git
   - https://sst.dev/docs/set-up-a-monorepo/
