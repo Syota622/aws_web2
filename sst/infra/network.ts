@@ -1,2 +1,4 @@
 // SSTのグローバルオブジェクトを使用
-export const vpc = new sst.aws.Vpc("MyVpc", {});
+export const vpc = new sst.aws.Vpc("MyVpc", {
+  az: 3
+});
