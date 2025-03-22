@@ -4,7 +4,7 @@
 - 資料
   - リポジトリ
 https://sst.dev/docs/set-up-a-monorepo/
-  - コンソール
+  - コンソール（オブザーバービリティみたいな感じ。CloudWatchを参照しなくても良いみたいなことが記載されている
 https://sst.dev/docs/console/
 
 - git clone https://github.com/sst-example/sst-example.git
