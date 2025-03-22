@@ -1,6 +1,9 @@
 # aws_web2
 
 # SST
+- 資料
+https://sst.dev/docs/set-up-a-monorepo/
+
 - git clone https://github.com/sst-example/sst-example.git
   - https://sst.dev/docs/set-up-a-monorepo/
 - npx replace-in-file '/monorepo-template/g' 'sst' '**/*.*' --verbose
@@ -58,7 +61,7 @@ SST 3.10.0  ready!
    ---
    MyBucket: sst-dev-mybucketbucket-mubkbbrr
 ```
-
+　　
 - npx sst diff --stage dev
 - npx sst remove --stage dev
 - npx sst runlock
