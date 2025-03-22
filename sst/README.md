@@ -66,3 +66,10 @@ SST 3.10.0  ready!
 - npx sst diff --stage dev
 - npx sst remove --stage dev
 - npx sst runlock
+
+# ディレクトリ構成
+- mkdir -p stacks/network
+- mkdir -p stacks/database
+- mkdir -p stacks/compute
+- mkdir -p stacks/storage
+- mkdir -p stacks/security
