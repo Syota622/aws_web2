@@ -62,7 +62,7 @@ SST 3.10.0  ready!
    ---
    MyBucket: sst-dev-mybucketbucket-mubkbbrr
 ```
-　　
+
 - npx sst diff --stage dev
 - npx sst remove --stage dev
 - npx sst runlock
