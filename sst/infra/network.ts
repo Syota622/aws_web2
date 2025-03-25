@@ -25,7 +25,7 @@ export const serviceSecurityGroup = new aws.ec2.SecurityGroup("ServiceSecurityGr
     }
   ],
   tags: {
-    Name: "ServiceSecurityGroup"
+    Name: "ECSServiceSecurityGroup"
   }
 });
 
