@@ -14,6 +14,10 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Bucket"
     }
+    "MyService": {
+      "service": string
+      "type": "sst.aws.Service"
+    }
     "MyVpc": {
       "type": "sst.aws.Vpc"
     }

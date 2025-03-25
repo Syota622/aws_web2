@@ -19,6 +19,9 @@ export default $config({
     // ECSクラスター設定をインポート
     const clusterModule = await import("./infra/cluster");
 
+    // ECSサービス設定をインポート
+    await import("./infra/service");
+
     return {
       MyBucket: storage.bucket.name,
       // VPC情報をエクスポート
