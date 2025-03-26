@@ -18,7 +18,7 @@ export const myService = new sst.aws.Service("MyService", {
   cpu: "0.25 vCPU",
   memory: "0.5 GB",
   
-  // デプロイするサービスの数
+  // AutoScalingの設定
   scaling: {
     min: 1,
     max: 2,
