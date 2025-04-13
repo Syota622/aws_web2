@@ -10,17 +10,17 @@ export default $config({
     };
   },
   async run() {
-    const storage = await import("./infra/storage");
+    const storage = await import("./infra/s3");
     await import("./infra/api");
     
     // 新しいネットワーク設定をインポート
-    const network = await import("./infra/network");
+    const network = await import("./infra/vpc-network");
     
     // ECSクラスター設定をインポート
-    const clusterModule = await import("./infra/cluster");
+    const clusterModule = await import("./infra/ecs-cluster");
 
     // ECSサービス設定をインポート
-    await import("./infra/service");
+    await import("./infra/ecs-service");
 
     return {
       MyBucket: storage.bucket.name,

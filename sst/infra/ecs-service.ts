@@ -1,4 +1,4 @@
-import { cluster } from "./cluster";
+import { cluster } from "./ecs-cluster";
 
 // ECSサービスの作成 - ALB付き
 export const myService = new sst.aws.Service("MyService", {
@@ -20,21 +20,21 @@ export const myService = new sst.aws.Service("MyService", {
   
   // AutoScalingの設定
   scaling: {
-    min: 1,
-    max: 2,
+    min: 0,
+    max: 0,
     cpuUtilization: 70
   },
   
-  // ALBの設定
-  loadBalancer: {
-    // パブリックサブネットにデプロイしてインターネットからアクセス可能に
-    public: true,
-    // ルールを定義 - シンプルな形式で試す
-    rules: [{
-      // リスニングポート
-      listen: "80/http",
-      // 転送先のコンテナ
-      container: "app"
-    }]
-  }
+  // // ALBの設定
+  // loadBalancer: {
+  //   // パブリックサブネットにデプロイしてインターネットからアクセス可能に
+  //   public: true,
+  //   // ルールを定義 - シンプルな形式で試す
+  //   rules: [{
+  //     // リスニングポート
+  //     listen: "80/http",
+  //     // 転送先のコンテナ
+  //     container: "app"
+  //   }]
+  // }
 });

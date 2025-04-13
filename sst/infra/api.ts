@@ -1,4 +1,4 @@
-import { bucket } from "./storage";
+import { bucket } from "./s3";
 
 export const myApi = new sst.aws.Function("MyApi", {
   url: true,
