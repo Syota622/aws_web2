@@ -7,11 +7,11 @@ https://sst.dev/docs/console/
 
 - git clone https://github.com/sst-example/sst-example.git
   - https://sst.dev/docs/set-up-a-monorepo/
-- npx replace-in-file '/monorepo-template/g' 'sst' '**/*.*' --verbose
-- npx sst diff --stage dev
-- npx sst deploy --stage dev
-- npx sst remove --stage dev
-- npx sst runlock
+- pnpm replace-in-file '/monorepo-template/g' 'sst' '**/*.*' --verbose
+- pnpm sst diff --stage dev
+- pnpm sst deploy --stage dev
+- pnpm sst remove --stage dev
+- pnpm sst runlock
 
 # ディレクトリ構成
 - mkdir -p stacks/network
@@ -53,7 +53,7 @@ sst-example/
 
 # コマンド実行結果例
 ```sh
-% npx replace-in-file '/monorepo-template/g' 'sst' '**/*.*' --verbose
+% pnpm replace-in-file '/monorepo-template/g' 'sst' '**/*.*' --verbose
 Need to install the following packages:
 replace-in-file@8.3.0
 Ok to proceed? (y) y
@@ -74,7 +74,7 @@ Replacing '/monorepo-template/g' with 'sst'
 - npm install
 - zd
 ```sh
-% npx sst deploy --stage dev
+% pnpm sst deploy --stage dev
 SST 3.10.0  ready!
 
 ➜  App:        sst
