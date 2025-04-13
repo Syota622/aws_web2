@@ -1,10 +1,10 @@
-import { Resource } from "sst";
-import { Handler } from "aws-lambda";
-import { Example } from "@sst/core/example";
-
-export const handler: Handler = async (_event) => {
+// SST v3での正しいハンドラー（インポート文を全て削除）
+export const handler = async (event) => {
   return {
     statusCode: 200,
-    body: `${Example.hello()} Linked to ${Resource.MyBucket.name}.`,
+    body: JSON.stringify({
+      message: "Hello from SST!",
+      event: event
+    }),
   };
 };
