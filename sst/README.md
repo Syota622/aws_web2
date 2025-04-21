@@ -12,6 +12,8 @@ https://sst.dev/docs/console/
 - pnpm sst deploy --stage dev
 - pnpm sst remove --stage dev
 - pnpm sst runlock
+- pnpm sst diff --stage dev --print-logs
+- pnpm sst deploy --stage dev --print-logs
 
 # ディレクトリ構成
 - mkdir -p stacks/network
