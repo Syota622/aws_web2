@@ -17,6 +17,9 @@ export default $config({
   async run() {
     const storage = await import("./infra/s3");
     await import("./infra/api");
+
+    // Route 53の設定をインポート
+    const route53 = await import("./infra/route53");
     
     // 新しいネットワーク設定をインポート
     const network = await import("./infra/vpc-network");
