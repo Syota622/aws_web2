@@ -6,12 +6,12 @@ export default $config({
       name: "sst",
       removal: input?.stage === "production" ? "retain" : "remove",
       protect: ["production"].includes(input?.stage),
-      home: "aws",
-      // ドメイン設定を追加
-      domain: {
-        // メインドメイン名を指定
-        name: "mokokero.com"
-      }
+      home: "aws"
+      // // ドメイン設定を追加
+      // domain: {
+      //   // メインドメイン名を指定
+      //   name: "mokokero.com"
+      // }
     };
   },
   async run() {

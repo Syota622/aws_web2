@@ -14,6 +14,7 @@ https://sst.dev/docs/console/
 - pnpm sst runlock
 - pnpm sst diff --stage dev --print-logs
 - pnpm sst deploy --stage dev --print-logs
+- pnpm sst refresh --stage dev（ローカルとクラウドの状態を一致させる）
 
 # ディレクトリ構成
 - mkdir -p stacks/network
