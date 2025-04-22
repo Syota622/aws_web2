@@ -1,5 +1,5 @@
-// import * as pulumi from "@pulumi/pulumi";
-// import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
+import * as aws from "@pulumi/aws";
 
 // ドメイン名を設定（sst.config.tsから取得するか、ここで直接指定）
 const domainName = "mokokero.com";
