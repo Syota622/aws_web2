@@ -25,8 +25,9 @@ ignoredBuiltDependencies:
 
 キャッシュを削除して再インストール
 - rm -rf .sst
+  - pnpm sst diff --stage devを実行すると自動的に.sstディレクトリが作成される
 - rm -rf node_modules
-- pnpm install
+  - pnpm installを実行すると自動的にnode_modulesディレクトリが作成される
 
 # ディレクトリ構成
 - mkdir -p stacks/network
