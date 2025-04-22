@@ -8,13 +8,25 @@ https://sst.dev/docs/console/
 - git clone https://github.com/sst-example/sst-example.git
   - https://sst.dev/docs/set-up-a-monorepo/
 - pnpm replace-in-file '/monorepo-template/g' 'sst' '**/*.*' --verbose
-- pnpm sst diff --stage dev
-- pnpm sst deploy --stage dev
-- pnpm sst remove --stage dev
-- pnpm sst runlock
-- pnpm sst diff --stage dev --print-logs
-- pnpm sst deploy --stage dev --print-logs
-- pnpm sst refresh --stage dev（ローカルとクラウドの状態を一致させる）
+- pnpm sst diff --stage dev(ローカルとクラウドの状態を比較)
+- pnpm sst deploy --stage dev(デプロイ)
+- pnpm sst remove --stage dev(削除)
+- pnpm sst runlock(ロックファイルを作成)
+- pnpm sst diff --stage dev --print-logs(ログを出力)
+- pnpm sst deploy --stage dev --print-logs(ログを出力)
+- pnpm sst refresh --stage dev(ローカルとクラウドの状態を一致させる)
+- pnpm store prune(パッケージのキャッシュを削除)
+
+- pnpm approve-build(ビルドを承認)
+```yml
+ignoredBuiltDependencies:
+  - esbuild
+```
+
+キャッシュを削除して再インストール
+- rm -rf .sst
+- rm -rf node_modules
+- pnpm install
 
 # ディレクトリ構成
 - mkdir -p stacks/network
