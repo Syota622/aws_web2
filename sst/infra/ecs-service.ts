@@ -1,4 +1,4 @@
-import { vpc, ecsTaskSecurityGroup } from "./vpc-network";
+import { vpc, ecsTaskSecurityGroup, albSecurityGroup } from "./vpc-network";
 import { cluster } from "./ecs-cluster";
 
 // ECSサービスの作成 - ALB付き
@@ -68,7 +68,24 @@ export const myService = new sst.aws.Service("MyService", {
         TaskDefinition: "MyServiceTask",
         Environment: process.env.SST_STAGE || "dev"
       };
-    }
+    },
+
+    // ALBの変換
+    loadBalancer: (args, opts, name) => {
+      // ALBのセキュリティグループを設定
+      args.securityGroups = [albSecurityGroup];
+      
+      // リスナーのタイムアウト設定
+      args.idleTimeout = 60;
+      
+      // タグを追加
+      args.tags = {
+        ...(args.tags || {}),
+        LoadBalancer: "MyServiceALB",
+        Environment: process.env.SST_STAGE || "dev"
+      };
+    },
+    
   },
   
   // AutoScalingの設定
