@@ -36,7 +36,7 @@ export const myService = new sst.aws.Service("MyService", {
       args.networkConfiguration.subnets = vpc.publicSubnets;
       
       // パブリックIPの割り当て設定
-      args.networkConfiguration.assignPublicIp = false;
+      args.networkConfiguration.assignPublicIp = true;
       
       // デフォルトのタスク数を2に設定
       args.desiredCount = 2;
@@ -75,7 +75,7 @@ export const myService = new sst.aws.Service("MyService", {
   // AutoScalingの設定
   scaling: {
     min: 1,
-    max: 3,
+    max: 1,
     cpuUtilization: 70
   },
   
