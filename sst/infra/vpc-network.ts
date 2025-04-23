@@ -4,7 +4,7 @@ export const vpc = new sst.aws.Vpc("MyVpc", {
 });
 
 // カスタムのセキュリティグループを作成
-export const serviceSecurityGroup = new aws.ec2.SecurityGroup("ServiceSecurityGroup", {
+export const ecsTaskSecurityGroup = new aws.ec2.SecurityGroup("ecsTaskSecurityGroup", {
   vpcId: vpc.id,
   description: "Allow HTTP traffic",
   ingress: [
@@ -25,7 +25,7 @@ export const serviceSecurityGroup = new aws.ec2.SecurityGroup("ServiceSecurityGr
     }
   ],
   tags: {
-    Name: "ECSServiceSecurityGroup"
+    Name: "ECSecsTaskSecurityGroup"
   }
 });
 
@@ -35,3 +35,6 @@ export const vpcInfo = {
   publicSubnets: vpc.publicSubnets,
   privateSubnets: vpc.privateSubnets
 };
+
+// セキュリティグループIDをエクスポート
+export const ecsTaskSgId = ecsTaskSecurityGroup.id;

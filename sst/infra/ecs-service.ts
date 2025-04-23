@@ -20,8 +20,8 @@ export const myService = new sst.aws.Service("MyService", {
   
   // AutoScalingの設定
   scaling: {
-    min: 0,
-    max: 0,
+    min: 1,
+    max: 1,
     cpuUtilization: 70
   },
   
