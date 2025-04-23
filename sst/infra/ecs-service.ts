@@ -1,4 +1,4 @@
-import { vpc } from "./vpc-network";
+import { vpc, ecsTaskSecurityGroup } from "./vpc-network";
 import { cluster } from "./ecs-cluster";
 
 // ECSサービスの作成 - ALB付き
@@ -29,8 +29,7 @@ export const myService = new sst.aws.Service("MyService", {
       }
       
       // セキュリティグループの設定
-      // 実際のセキュリティグループIDに置き換えてください
-      args.networkConfiguration.securityGroups = ["sg-05db76e59ee2ee46b"];
+      args.networkConfiguration.securityGroups = [ecsTaskSecurityGroup];
       
       // サブネットの設定（プライベートサブネットを使用）
       args.networkConfiguration.subnets = vpc.publicSubnets;
@@ -39,7 +38,7 @@ export const myService = new sst.aws.Service("MyService", {
       args.networkConfiguration.assignPublicIp = true;
       
       // デフォルトのタスク数を2に設定
-      args.desiredCount = 2;
+      args.desiredCount = 1;
       
       // サービスの起動タイプを指定
       args.launchType = "FARGATE";
