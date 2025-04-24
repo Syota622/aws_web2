@@ -38,7 +38,7 @@ export const myService = new sst.aws.Service("MyService", {
       args.networkConfiguration.assignPublicIp = true;
       
       // デフォルトのタスク数を2に設定
-      args.desiredCount = 1;
+      args.desiredCount = 0;
       
       // サービスの起動タイプを指定
       args.launchType = "FARGATE";
@@ -90,25 +90,25 @@ export const myService = new sst.aws.Service("MyService", {
   
   // AutoScalingの設定
   scaling: {
-    min: 1,
-    max: 1,
+    min: 0,
+    max: 0,
     cpuUtilization: 70
   },
   
-  // ALBの設定
-  loadBalancer: {
-    // DNS設定 - dnsではなくdomainを使用
-    domain: "api.mokokero.com",
-    // パブリックサブネットにデプロイしてインターネットからアクセス可能に
-    public: true,
-    // ルールを定義
-    rules: [{
-      // リスニングポート
-      listen: "80/http",
-      // 転送先のコンテナ
-      container: "app"
-    }]
-  }
+  // // ALBの設定
+  // loadBalancer: {
+  //   // DNS設定 - dnsではなくdomainを使用
+  //   domain: "api.mokokero.com",
+  //   // パブリックサブネットにデプロイしてインターネットからアクセス可能に
+  //   public: true,
+  //   // ルールを定義
+  //   rules: [{
+  //     // リスニングポート
+  //     listen: "80/http",
+  //     // 転送先のコンテナ
+  //     container: "app"
+  //   }]
+  // }
 });
 
 // // サービスARNをエクスポート
