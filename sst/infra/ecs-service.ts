@@ -105,12 +105,20 @@ export const myService = new sst.aws.Service("MyService", {
     // パブリックサブネットにデプロイしてインターネットからアクセス可能に
     public: true,
     // ルールを定義
-    rules: [{
-      // リスニングポート
-      listen: "80/http",
-      // 転送先のコンテナ
-      container: "app"
-    }]
+    rules: [
+      {
+        // HTTPSリスナー
+        listen: "443/https",
+        // 転送先のコンテナ
+        container: "app"
+      },
+      {
+        // HTTPリスナー - HTTPSへリダイレクト
+        listen: "80/http",
+        // HTTPSへリダイレクト設定
+        redirect: "443/https"
+      }
+    ]
   }
 });
 
