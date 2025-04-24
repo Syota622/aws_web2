@@ -9,7 +9,7 @@ app.use('*', logger());
 
 // Routes
 app.get('/', (c) => {
-  console.log('Received request to root endpoint');
+  console.log('Received request to root endpoint111');
   return c.json({
     message: 'Hello from Hono!',
     timestamp: new Date().toISOString()

@@ -6,12 +6,15 @@ export const myService = new sst.aws.Service("MyService", {
   // 作成したクラスターを使用
   cluster,
   
-  // コンテナの設定
+  // Dockerfileを使用したイメージ設定
   containers: [
     {
-      // DockerHubの公式Nginxイメージを使用
-      image: "nginx:latest",
-      name: "app"
+      // Dockerfileの参照
+      image: {
+        context: "../backend", // プロジェクトルートからbackendフォルダへのパス
+        dockerfile: "../backend/Dockerfile" // Dockerfileへの完全なパス
+      },
+      name: "app" // コンテナ名を「app」に設定
     }
   ],
   
@@ -38,7 +41,7 @@ export const myService = new sst.aws.Service("MyService", {
       args.networkConfiguration.assignPublicIp = true;
       
       // デフォルトのタスク数を2に設定
-      args.desiredCount = 0;
+      args.desiredCount = 1;
       
       // サービスの起動タイプを指定
       args.launchType = "FARGATE";
@@ -90,25 +93,25 @@ export const myService = new sst.aws.Service("MyService", {
   
   // AutoScalingの設定
   scaling: {
-    min: 0,
-    max: 0,
+    min: 1,
+    max: 1,
     cpuUtilization: 70
   },
   
-  // // ALBの設定
-  // loadBalancer: {
-  //   // DNS設定 - dnsではなくdomainを使用
-  //   domain: "api.mokokero.com",
-  //   // パブリックサブネットにデプロイしてインターネットからアクセス可能に
-  //   public: true,
-  //   // ルールを定義
-  //   rules: [{
-  //     // リスニングポート
-  //     listen: "80/http",
-  //     // 転送先のコンテナ
-  //     container: "app"
-  //   }]
-  // }
+  // ALBの設定
+  loadBalancer: {
+    // DNS設定 - dnsではなくdomainを使用
+    domain: "api.mokokero.com",
+    // パブリックサブネットにデプロイしてインターネットからアクセス可能に
+    public: true,
+    // ルールを定義
+    rules: [{
+      // リスニングポート
+      listen: "80/http",
+      // 転送先のコンテナ
+      container: "app"
+    }]
+  }
 });
 
 // // サービスARNをエクスポート

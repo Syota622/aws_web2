@@ -70,6 +70,16 @@ export const albToHttpsIngress = new aws.ec2.SecurityGroupRule("albToHttpsIngres
   description: "Allow HTTPS from anywhere"
 });
 
+export const albToHonoIngress = new aws.ec2.SecurityGroupRule("albToHonoIngress", {
+  type: "ingress",
+  fromPort: 3000,
+  toPort: 3000,
+  protocol: "tcp",
+  sourceSecurityGroupId: albSecurityGroup.id,
+  securityGroupId: ecsTaskSecurityGroup.id,
+  description: "Allow Hono from anywhere"
+});
+
 export const albToEcsRuleEgress = new aws.ec2.SecurityGroupRule("AlbToEcsRuleEgress", {
   type: "egress",
   fromPort: 0,
