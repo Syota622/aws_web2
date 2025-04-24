@@ -110,7 +110,8 @@ export const myService = new sst.aws.Service("MyService", {
         // HTTPSリスナー
         listen: "443/https",
         // 転送先のコンテナ
-        container: "app"
+        container: "app",
+        forward: "3000/http"
       },
       {
         // HTTPリスナー - HTTPSへリダイレクト
@@ -118,7 +119,13 @@ export const myService = new sst.aws.Service("MyService", {
         // HTTPSへリダイレクト設定
         redirect: "443/https"
       }
-    ]
+    ],
+    health: {
+      "3000/http": {
+        path: "/",
+        interval: "10 seconds"
+      }
+    }
   }
 });
 
