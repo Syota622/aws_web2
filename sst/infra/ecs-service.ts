@@ -12,9 +12,9 @@ export const myService = new sst.aws.Service("MyService", {
       // Dockerfileの参照
       image: {
         context: "../backend", // プロジェクトルートからbackendフォルダへのパス
-        dockerfile: "../backend/Dockerfile" // Dockerfileへの完全なパス
+        dockerfile: "../backend/Dockerfile.prod" // Dockerfileへの完全なパス
       },
-      name: "app" // コンテナ名を「app」に設定
+      name: "app", // コンテナ名を「app」に設定
     }
   ],
   
