@@ -16,6 +16,8 @@ https://sst.dev/docs/console/
 - pnpm sst deploy --stage dev --print-logs(ログを出力)
 - pnpm sst refresh --stage dev(ローカルとクラウドの状態を一致させる)
 - pnpm store prune(パッケージのキャッシュを削除)
+- pnpm sst state export --stage dev（ステータスのエクスポート）
+- sst state export --stage dev | grep "urn:"（ステータスのエクスポートからリソースのURNを取得）
 
 - pnpm approve-build(ビルドを承認)
 ```yml
