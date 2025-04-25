@@ -32,7 +32,8 @@ export default $config({
     await import("./infra/ecs-service");
 
     // Cognito設定をインポート
-    const cognito = await import("./infra/cognito");
+    const userPool = await import("./infra/cognito/user-pool");
+    const userPoolClient = await import("./infra/cognito/user-pool-client");
 
     return {
       MyBucket: storage.bucket.name,
@@ -43,8 +44,8 @@ export default $config({
       // ECSクラスター情報をエクスポート
       ClusterId: clusterModule.cluster.id,
       // Cognito情報をエクスポート
-      UserPoolId: cognito.userPoolId,
-      UserPoolClientId: cognito.userPoolClientId
+      UserPoolId: userPool.userPool.id,
+      UserPoolClientId: userPoolClient.userPoolClient.id
     };
   },
 });
