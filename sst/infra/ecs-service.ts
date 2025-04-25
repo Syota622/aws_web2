@@ -26,10 +26,6 @@ export const myService = new sst.aws.Service("MyService", {
   transform: {
     // サービスの変換
     service: (args, opts, name) => {
-      // ネットワーク設定がなければ初期化
-      if (!args.networkConfiguration) {
-        args.networkConfiguration = {};
-      }
       
       // セキュリティグループの設定
       args.networkConfiguration.securityGroups = [ecsTaskSecurityGroup];
