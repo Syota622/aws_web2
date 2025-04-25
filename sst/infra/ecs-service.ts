@@ -40,7 +40,7 @@ export const myService = new sst.aws.Service("MyService", {
       // パブリックIPの割り当て設定
       args.networkConfiguration.assignPublicIp = true;
       
-      // デフォルトのタスク数を2に設定
+      // デフォルトのタスク数を0に設定
       args.desiredCount = 1;
       
       // サービスの起動タイプを指定

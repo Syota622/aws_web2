@@ -31,6 +31,9 @@ export default $config({
     // ECSサービス設定をインポート
     await import("./infra/ecs-service");
 
+    // Cognito設定をインポート
+    const cognito = await import("./infra/cognito");
+
     return {
       MyBucket: storage.bucket.name,
       // VPC情報をエクスポート
@@ -38,7 +41,10 @@ export default $config({
       PublicSubnets: network.vpc.publicSubnets,
       PrivateSubnets: network.vpc.privateSubnets,
       // ECSクラスター情報をエクスポート
-      ClusterId: clusterModule.cluster.id
+      ClusterId: clusterModule.cluster.id,
+      // Cognito情報をエクスポート
+      UserPoolId: cognito.userPoolId,
+      UserPoolClientId: cognito.userPoolClientId
     };
   },
 });
