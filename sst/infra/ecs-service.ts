@@ -37,7 +37,7 @@ export const myService = new sst.aws.Service("MyService", {
       args.networkConfiguration.assignPublicIp = true;
       
       // デフォルトのタスク数を0に設定
-      args.desiredCount = 1;
+      args.desiredCount = 0;
       
       // サービスの起動タイプを指定
       args.launchType = "FARGATE";
@@ -94,35 +94,35 @@ export const myService = new sst.aws.Service("MyService", {
     cpuUtilization: 70
   },
   
-  // ALBの設定
-  loadBalancer: {
-    // DNS設定 - dnsではなくdomainを使用
-    domain: "api.mokokero.com",
-    // パブリックサブネットにデプロイしてインターネットからアクセス可能に
-    public: true,
-    // ルールを定義
-    rules: [
-      {
-        // HTTPSリスナー
-        listen: "443/https",
-        // 転送先のコンテナ
-        container: "app",
-        forward: "3000/http"
-      },
-      {
-        // HTTPリスナー - HTTPSへリダイレクト
-        listen: "80/http",
-        // HTTPSへリダイレクト設定
-        redirect: "443/https"
-      }
-    ],
-    health: {
-      "3000/http": {
-        path: "/",
-        interval: "10 seconds"
-      }
-    }
-  }
+  // // ALBの設定
+  // loadBalancer: {
+  //   // DNS設定 - dnsではなくdomainを使用
+  //   domain: "api.mokokero.com",
+  //   // パブリックサブネットにデプロイしてインターネットからアクセス可能に
+  //   public: true,
+  //   // ルールを定義
+  //   rules: [
+  //     {
+  //       // HTTPSリスナー
+  //       listen: "443/https",
+  //       // 転送先のコンテナ
+  //       container: "app",
+  //       forward: "3000/http"
+  //     },
+  //     {
+  //       // HTTPリスナー - HTTPSへリダイレクト
+  //       listen: "80/http",
+  //       // HTTPSへリダイレクト設定
+  //       redirect: "443/https"
+  //     }
+  //   ],
+  //   health: {
+  //     "3000/http": {
+  //       path: "/",
+  //       interval: "10 seconds"
+  //     }
+  //   }
+  // }
 });
 
 // // サービスARNをエクスポート
