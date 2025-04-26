@@ -1,40 +1,40 @@
-# Welcome to Remix!
+# Remixへようこそ！
 
-- 📖 [Remix docs](https://remix.run/docs)
+- 📖 [Remixドキュメント](https://remix.run/docs)
 
-## Development
+## 開発
 
-Run the dev server:
+開発サーバーを実行：
 
 ```shellscript
-npm run dev
+pnpm run dev
 ```
 
-## Deployment
+## デプロイ
 
-First, build your app for production:
+まず、アプリケーションを本番用にビルドします：
 
 ```sh
-npm run build
+pnpm run build
 ```
 
-Then run the app in production mode:
+次に、本番モードでアプリケーションを実行します：
 
 ```sh
-npm start
+pnpm start
 ```
 
-Now you'll need to pick a host to deploy it to.
+これで、デプロイ先のホストを選ぶ必要があります。
 
 ### DIY
 
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
+Node.jsアプリケーションのデプロイに慣れていれば、組み込みのRemixアプリケーションサーバーは本番環境に対応しています。
 
-Make sure to deploy the output of `npm run build`
+`pnpm run build`の出力を必ずデプロイしてください：
 
 - `build/server`
 - `build/client`
 
-## Styling
+## スタイリング
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
+このテンプレートには、シンプルな開始体験のために[Tailwind CSS](https://tailwindcss.com/)が既に設定されています。お好みのCSSフレームワークを使用できます。詳細については、[ViteのCSSに関するドキュメント](https://vitejs.dev/guide/features.html#css)を参照してください。
