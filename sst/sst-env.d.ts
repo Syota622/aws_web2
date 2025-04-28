@@ -17,6 +17,10 @@ declare module "sst" {
     "MyVpc": {
       "type": "sst.aws.Vpc"
     }
+    "MyWeb": {
+      "type": "sst.aws.Remix"
+      "url": string
+    }
     "NewCreateMyBucket": {
       "name": string
       "type": "sst.aws.Bucket"
