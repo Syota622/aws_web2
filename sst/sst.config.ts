@@ -35,6 +35,9 @@ export default $config({
     const userPool = await import("./infra/cognito/user-pool");
     const userPoolClient = await import("./infra/cognito/user-pool-client");
 
+    // Remix設定をインポート
+    await import("./infra/remix");
+
     return {
       MyBucket: storage.bucket.name,
       // VPC情報をエクスポート
