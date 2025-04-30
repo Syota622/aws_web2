@@ -38,6 +38,9 @@ export default $config({
     // Remix設定をインポート
     await import("./infra/remix");
 
+    // Aurora設定をインポート
+    await import("./infra/aurora");
+
     return {
       MyBucket: storage.bucket.name,
       // VPC情報をエクスポート
