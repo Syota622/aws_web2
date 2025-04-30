@@ -7,4 +7,6 @@ const postgres = new sst.aws.Aurora("MyDatabase", {
     max: "2 ACU"
   },
   vpc,
+  // username: "postgres", // ユーザー名（直接指定する場合）
+  // password: "mypassword", // パスワード（直接指定する場合）
 });
