@@ -10,17 +10,6 @@ declare module "sst" {
       "type": "sst.aws.Function"
       "url": string
     }
-    "MyDatabase": {
-      "clusterArn": string
-      "database": string
-      "host": string
-      "password": string
-      "port": number
-      "reader": string
-      "secretArn": string
-      "type": "sst.aws.Aurora"
-      "username": string
-    }
     "MyService": {
       "service": string
       "type": "sst.aws.Service"
