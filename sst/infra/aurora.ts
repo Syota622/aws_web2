@@ -1,18 +1,24 @@
-import { vpc } from "./vpc-network";
+import { vpc, auroraPostgresSecurityGroup } from "./vpc-network";
 
-const postgres = new sst.aws.Aurora("MyDatabase", {
-  engine: "postgres",
-  scaling: {
-    min: "1 ACU",
-    max: "2 ACU"
-  },
-  vpc,
-  // username: "postgres", // ユーザー名（直接指定する場合）
-  // password: "mypassword", // パスワード（直接指定する場合）
-});
+const idPrefix = "my-app";
 
-// const aurora = new sst.aws.Postgres.v1("MyCluster",
-//   vpc: {
-//     privateSubnets
-//   }
-// )
+const postgres = new sst.aws.Aurora(
+  `${idPrefix}-postgres`, 
+  {
+    engine: "postgres",
+    scaling: {
+      min: "1 ACU",
+      max: "2 ACU"
+    },
+    replicas: 1,
+    vpc: {
+      subnets: vpc.privateSubnets,
+      securityGroups: [auroraPostgresSecurityGroup]
+    },
+    transform: {
+      cluster: {
+        backupRetentionPeriod: 3 // バックアップを3日間保持
+      }
+    }
+  }
+);
