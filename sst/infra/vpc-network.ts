@@ -90,6 +90,39 @@ export const albToEcsRuleEgress = new aws.ec2.SecurityGroupRule("AlbToEcsRuleEgr
   description: "Allow all traffic to ALB"
 });
 
+//////// Security Group Rule コーディング(循環参照を避けるため別のリソースとして作成) ////////
+//  Aurora Postgres用のセキュリティグループを作成
+export const auroraPostgresSecurityGroup = new aws.ec2.SecurityGroup("auroraPostgres", {
+  vpcId: vpc.id,
+  ingress: [], // デフォルトを反映させないために空にしている
+  egress: [], // デフォルトを反映させないために空にしている
+  description: "Allow HTTP traffic",
+  tags: {
+    Name: "auroraPostgres"
+  }
+});
+
+// Aurora Postgresのセキュリティグループルールを追加
+export const auroraPostgresIngress = new aws.ec2.SecurityGroupRule("auroraPostgresIngress", {
+  type: "ingress",
+  fromPort: 5439,
+  toPort: 5439,
+  protocol: "tcp",
+  sourceSecurityGroupId: albSecurityGroup.id,
+  securityGroupId: auroraPostgresSecurityGroup.id,
+  description: "Allow HTTP traffic from ALB"
+});
+
+export const auroraPostgresEgress = new aws.ec2.SecurityGroupRule("auroraPostgresEgress", {
+  type: "egress",
+  fromPort: 0,
+  toPort: 0,
+  protocol: "-1",
+  securityGroupId: auroraPostgresSecurityGroup.id,
+  cidrBlocks: ["0.0.0.0/0"],
+  description: "Allow all traffic to ALB"
+});
+
 //////// Security Group Rule コーディング ////////
 
 // VPC情報をエクスポート
@@ -102,3 +135,4 @@ export const vpcInfo = {
 // セキュリティグループIDをエクスポート
 export const ecsTaskSgId = ecsTaskSecurityGroup.id;
 export const albSgId = albSecurityGroup.id;
+export const auroraPostgresSgId = auroraPostgresSecurityGroup.id;
