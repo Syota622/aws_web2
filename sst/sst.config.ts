@@ -41,8 +41,8 @@ export default $config({
     // Aurora設定をインポート
     await import("./infra/aurora");
 
-    // // DynamoDBバックアップ設定をインポート
-    // await import("./infra/backup/backup-dynamodb");
+    // DynamoDBバックアップ設定をインポート
+    await import("./infra/backup/backup-dynamodb");
 
     return {
       MyBucket: storage.bucket.name,

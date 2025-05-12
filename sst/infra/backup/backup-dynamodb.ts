@@ -24,22 +24,17 @@ const backupRole = new aws.iam.Role("BackupRole", {
   ]
 });
 
-// バックアッププランを作成 - 正しい構造に修正
+// バックアッププランを作成
+// エラーメッセージから、'rules'が必要とわかる
 const backupPlan = new aws.backup.Plan("DynamoDBBackupPlan", {
   name: `dynamodb-backup-plan-${process.env.SST_STAGE || 'dev'}`,
-  // rules配列を使用
-  rules: [
-    {
-      ruleName: "DailyBackups",
-      targetVaultName: backupVault.name,
-      scheduleExpression: "cron(0 1 * * ? *)", // 毎日午前1時にバックアップ
-      startWindowMinutes: 60,
-      completionWindowMinutes: 120,
-      lifecycle: {
-        deleteAfterDays: 14 // バックアップは14日間保持
-      }
-    }
-  ]
+  // ここではrulesを配列として提供
+  rules: [{
+    ruleName: "DailyBackups",
+    targetVaultName: backupVault.name,
+    schedule: "cron(0 1 * * ? *)",
+    // 最小限のプロパティのみ設定
+  }]
 });
 
 // DynamoDBテーブルをバックアッププランに含める
@@ -48,7 +43,7 @@ const backupSelection = new aws.backup.Selection("DynamoDBTableSelection", {
   planId: backupPlan.id,
   resources: [
     // 指定されたDynamoDBテーブルのARNを使用
-    "arn:aws:dynamodb:ap-northeast-1:235484765172:table/table"
+    "arn:aws:dynamodb:ap-northeast-1:235484765172:table/sst-table"
   ],
   iamRoleArn: backupRole.arn
 });
