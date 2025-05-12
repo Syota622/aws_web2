@@ -1,5 +1,6 @@
 // Auroraデータベースのバックアップ設定（東京リージョンのプライマリバックアップと大阪リージョンへのコピー）
 import { osakaProvider } from "../providers"; // プロバイダーをインポート
+
 // 東京リージョンにAuroraバックアップボールトを作成
 const tokyoAuroraBackupVault = new aws.backup.Vault("TokyoAuroraBackupVault", {
   name: `tokyo-aurora-vault-${process.env.SST_STAGE || 'dev'}`
@@ -37,7 +38,7 @@ const auroraBackupPlan = new aws.backup.Plan("AuroraBackupPlan", {
     ruleName: `aurora-hourly-backup-${process.env.SST_STAGE || 'dev'}`,
     targetVaultName: tokyoAuroraBackupVault.name,
     // 1時間ごとにバックアップ
-    schedule: "cron(0 * * * ? *)",
+    schedule: "cron(0 9 * * ? *)",
     // バックアップウィンドウを設定
     startWindow: 60,          // バックアップを開始するまでの時間（分）
     completionWindow: 120,    // バックアップを完了するまでの時間（分）    
