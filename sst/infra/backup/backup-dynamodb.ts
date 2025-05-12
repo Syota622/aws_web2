@@ -1,9 +1,20 @@
-// 東京リージョン内でのDynamoDBテーブルのバックアップ設定
+// 東京リージョン内でのDynamoDBテーブルのバックアップ設定と大阪リージョンへのクロスリージョンバックアップ
+
+// 大阪リージョンのプロバイダーを定義
+const osakaProvider = new aws.Provider("osaka-provider", {
+  region: "ap-northeast-3" // 大阪リージョン（関西リージョン）
+});
 
 // 東京リージョンにバックアップボールトを作成
-const backupVault = new aws.backup.Vault("DynamoDBBackupVault", {
-  name: `dynamodb-backup-vault-${process.env.SST_STAGE || 'dev'}`
+const tokyoBackupVault = new aws.backup.Vault("TokyoBackupVault", {
+  name: `tokyo-dynamodb-vault-${process.env.SST_STAGE || 'dev'}`
+  // デフォルトのプロバイダー（東京リージョン）を使用
 });
+
+// 大阪リージョンにバックアップボールトを作成
+const osakaBackupVault = new aws.backup.Vault("OsakaBackupVault", {
+  name: `osaka-dynamodb-vault-${process.env.SST_STAGE || 'dev'}`
+}, { provider: osakaProvider });
 
 // バックアップ用のIAMロールを作成
 const backupRole = new aws.iam.Role("BackupRole", {
@@ -24,21 +35,29 @@ const backupRole = new aws.iam.Role("BackupRole", {
   ]
 });
 
-// バックアッププランを作成
+// バックアッププランを作成（東京での1時間ごとのバックアップと大阪へのクロスリージョンコピー）
 const backupPlan = new aws.backup.Plan("DynamoDBBackupPlan", {
   name: `dynamodb-backup-plan-${process.env.SST_STAGE || 'dev'}`,
-  // ここではrulesを配列として提供
   rules: [{
     ruleName: `dynamodb-sst-hourly-${process.env.SST_STAGE || 'dev'}`,
-    targetVaultName: backupVault.name,
+    targetVaultName: tokyoBackupVault.name,
     // 毎時間バックアップ
     schedule: "cron(0 * * * ? *)",
     // バックアップウィンドウを設定
     startWindow: 60,          // バックアップを開始するまでの時間（分）
     completionWindow: 120,    // バックアップを完了するまでの時間（分）    
     lifecycle: {
-      deleteAfter: 1      // 1日間保持（3世代以上のバックアップは保持されない）
+      deleteAfter: 1          // 東京のバックアップは1日間保持
     },
+    // 大阪リージョンへのコピーアクション - 明示的にリージョンを指定
+    copyActions: [{
+      destinationVaultArn: osakaBackupVault.arn,
+      // 明示的に大阪リージョンを指定
+      destinationRegion: "ap-northeast-3", // 重要: 大阪リージョンを明示的に指定
+      lifecycle: {
+        deleteAfter: 3        // 大阪リージョンでは3日間保持
+      }
+    }]
   }]
 });
 
@@ -54,6 +73,7 @@ const backupSelection = new aws.backup.Selection("DynamoDBTableSelection", {
 });
 
 // エクスポート（必要に応じて）
-export const backupVaultArn = backupVault.arn;
-export const backupPlanArn = backupPlan.arn;
+export const tokyoBackupVaultArn = tokyoBackupVault.arn;
+export const osakaBackupVaultArn = osakaBackupVault.arn;
+export const backupPlanArn = backupPlan.id;
 export const backupSelectionId = backupSelection.id;
