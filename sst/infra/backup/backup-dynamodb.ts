@@ -25,15 +25,20 @@ const backupRole = new aws.iam.Role("BackupRole", {
 });
 
 // バックアッププランを作成
-// エラーメッセージから、'rules'が必要とわかる
 const backupPlan = new aws.backup.Plan("DynamoDBBackupPlan", {
   name: `dynamodb-backup-plan-${process.env.SST_STAGE || 'dev'}`,
   // ここではrulesを配列として提供
   rules: [{
-    ruleName: "DailyBackups",
+    ruleName: `dynamodb-sst-hourly-${process.env.SST_STAGE || 'dev'}`,
     targetVaultName: backupVault.name,
-    schedule: "cron(0 1 * * ? *)",
-    // 最小限のプロパティのみ設定
+    // 毎時間バックアップ
+    schedule: "cron(0 * * * ? *)",
+    // バックアップウィンドウを設定
+    startWindow: 60,          // バックアップを開始するまでの時間（分）
+    completionWindow: 120,    // バックアップを完了するまでの時間（分）    
+    lifecycle: {
+      deleteAfter: 1      // 1日間保持（3世代以上のバックアップは保持されない）
+    },
   }]
 });
 
