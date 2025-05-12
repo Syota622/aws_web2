@@ -1,9 +1,5 @@
 // 東京リージョン内でのDynamoDBテーブルのバックアップ設定と大阪リージョンへのクロスリージョンバックアップ
-
-// 大阪リージョンのプロバイダーを定義
-const osakaProviderDynamoDB = new aws.Provider("osaka-provider", {
-  region: "ap-northeast-3" // 大阪リージョン（関西リージョン）
-});
+import { osakaProvider } from "../providers"; // プロバイダーをインポート
 
 // 東京リージョンにバックアップボールトを作成
 const tokyoBackupVault = new aws.backup.Vault("TokyoBackupVault", {
@@ -14,7 +10,7 @@ const tokyoBackupVault = new aws.backup.Vault("TokyoBackupVault", {
 // 大阪リージョンにバックアップボールトを作成
 const osakaBackupVault = new aws.backup.Vault("OsakaBackupVault", {
   name: `osaka-dynamodb-vault-${process.env.SST_STAGE || 'dev'}`
-}, { provider: osakaProviderDynamoDB });
+}, { provider: osakaProvider });
 
 // バックアップ用のIAMロールを作成
 const backupRole = new aws.iam.Role("BackupRole", {
