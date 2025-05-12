@@ -52,8 +52,6 @@ const backupPlan = new aws.backup.Plan("DynamoDBBackupPlan", {
     // 大阪リージョンへのコピーアクション - 明示的にリージョンを指定
     copyActions: [{
       destinationVaultArn: osakaBackupVault.arn,
-      // 明示的に大阪リージョンを指定
-      destinationRegion: "ap-northeast-3", // 重要: 大阪リージョンを明示的に指定
       lifecycle: {
         deleteAfter: 3        // 大阪リージョンでは3日間保持
       }
