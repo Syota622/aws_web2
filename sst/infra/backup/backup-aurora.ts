@@ -1,6 +1,6 @@
 // Auroraデータベースのバックアップ設定（東京リージョンのプライマリバックアップと大阪リージョンへのコピー）
 import { osakaProvider } from "../providers"; // プロバイダーをインポート
-
+import { rdsResources } from "../aurora";
 // 東京リージョンにAuroraバックアップボールトを作成
 const tokyoAuroraBackupVault = new aws.backup.Vault("TokyoAuroraBackupVault", {
   name: `tokyo-aurora-vault-${process.env.SST_STAGE || 'dev'}`
@@ -38,7 +38,8 @@ const auroraBackupPlan = new aws.backup.Plan("AuroraBackupPlan", {
     ruleName: `aurora-hourly-backup-${process.env.SST_STAGE || 'dev'}`,
     targetVaultName: tokyoAuroraBackupVault.name,
     // 15時20分に起動
-    schedule: "cron(20 6 * * ? *)",
+    schedule: "cron(25 15 * * ? *)",
+    scheduleExpressionTimezone: "Asia/Tokyo",
     // バックアップウィンドウを設定
     startWindow: 60,          // バックアップを開始するまでの時間（分）
     completionWindow: 120,    // バックアップを完了するまでの時間（分）    
@@ -57,11 +58,13 @@ const auroraBackupPlan = new aws.backup.Plan("AuroraBackupPlan", {
 });
 
 // Auroraクラスターをバックアッププランに含める
+// arn:aws:rds:ap-northeast-1:235484765172:cluster:sst-dev-myapppostgrescluster-rzvfhxte
 const auroraBackupSelection = new aws.backup.Selection("AuroraBackupSelection", {
   name: `aurora-selection-${process.env.SST_STAGE || 'dev'}`,
   planId: auroraBackupPlan.id,
   resources: [
-    "arn:aws:rds:ap-northeast-1:235484765172:cluster:sst-dev-myapppostgrescluster-rzvfhxte"
+    rdsResources.postgres.clusterArn
+    // "arn:aws:rds:ap-northeast-1:235484765172:cluster:test"
   ],
   iamRoleArn: auroraBackupRole.arn
 });
@@ -70,4 +73,5 @@ const auroraBackupSelection = new aws.backup.Selection("AuroraBackupSelection", 
 export const tokyoAuroraBackupVaultArn = tokyoAuroraBackupVault.arn;
 export const osakaAuroraBackupVaultArn = osakaAuroraBackupVault.arn;
 export const auroraBackupPlanArn = auroraBackupPlan.id;
-export const auroraBackupSelectionId = auroraBackupSelection.id;
+// export const auroraBackupSelectionId = auroraBackupSelection.id;
+// export const auroraBackupSelectionTestId = auroraBackupSelectionTest.id;

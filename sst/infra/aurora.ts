@@ -22,3 +22,7 @@ const postgres = new sst.aws.Aurora(
     }
   }
 );
+
+export const rdsResources = {
+  postgres
+}
