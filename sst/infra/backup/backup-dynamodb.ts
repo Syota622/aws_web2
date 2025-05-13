@@ -38,7 +38,8 @@ const backupPlan = new aws.backup.Plan("DynamoDBBackupPlan", {
     ruleName: `dynamodb-sst-hourly-${process.env.SST_STAGE || 'dev'}`,
     targetVaultName: tokyoBackupVault.name,
     // 15時20分に起動
-    schedule: "cron(20 6 * * ? *)",
+    schedule: "cron(25 15 * * ? *)",
+    scheduleExpressionTimezone: "Asia/Tokyo",
     // バックアップウィンドウを設定
     startWindow: 60,          // バックアップを開始するまでの時間（分）
     completionWindow: 120,    // バックアップを完了するまでの時間（分）    
