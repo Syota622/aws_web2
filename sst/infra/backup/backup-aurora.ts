@@ -37,21 +37,21 @@ const auroraBackupPlan = new aws.backup.Plan("AuroraBackupPlan", {
   rules: [{
     ruleName: `aurora-hourly-backup-${process.env.SST_STAGE || 'dev'}`,
     targetVaultName: tokyoAuroraBackupVault.name,
-    // 15時20分に起動
-    schedule: "cron(25 15 * * ? *)",
+    // 毎週水曜日の16:40に実行（水曜=3）
+    schedule: "cron(40 16 ? * 3 *)",
     scheduleExpressionTimezone: "Asia/Tokyo",
     // バックアップウィンドウを設定
     startWindow: 60,          // バックアップを開始するまでの時間（分）
     completionWindow: 120,    // バックアップを完了するまでの時間（分）    
     // RDSとAuroraはバックアップのライフサイクル設定が少し異なる可能性があるので注意
     lifecycle: {
-    deleteAfter: 1          // 東京のバックアップは1日間保持
+    deleteAfter: 7            // 東京のバックアップは7日間保持（1世代のみ保持）
   },
     // 大阪リージョンへのコピーアクション
     copyActions: [{
       destinationVaultArn: osakaAuroraBackupVault.arn,
       lifecycle: {
-        deleteAfter: 3        // 大阪リージョンでは3日間保持
+        deleteAfter: 28       // 大阪リージョンでは28日間保持（4世代保持）
       }
     }]
   }]
