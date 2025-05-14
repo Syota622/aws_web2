@@ -37,8 +37,8 @@ const auroraBackupPlan = new aws.backup.Plan("AuroraBackupPlan", {
   rules: [{
     ruleName: `aurora-hourly-backup-${process.env.SST_STAGE || 'dev'}`,
     targetVaultName: tokyoAuroraBackupVault.name,
-    // 毎週水曜日の16:40に実行（水曜=3）
-    schedule: "cron(40 16 ? * 3 *)",
+    // 毎週水曜日の16:40に実行（水曜=4）
+    schedule: "cron(40 16 ? * 4 *)",
     scheduleExpressionTimezone: "Asia/Tokyo",
     // バックアップウィンドウを設定
     startWindow: 60,          // バックアップを開始するまでの時間（分）

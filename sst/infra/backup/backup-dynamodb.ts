@@ -37,8 +37,8 @@ const backupPlan = new aws.backup.Plan("DynamoDBBackupPlan", {
   rules: [{
     ruleName: `dynamodb-sst-hourly-${process.env.SST_STAGE || 'dev'}`,
     targetVaultName: tokyoBackupVault.name,
-    // 毎週水曜日の16:40に実行（水曜=3）
-    schedule: "cron(40 16 ? * 3 *)",
+    // 毎週水曜日の16:40に実行（水曜=4）
+    schedule: "cron(40 16 ? * 4 *)",
     scheduleExpressionTimezone: "Asia/Tokyo",
     // バックアップウィンドウを設定
     startWindow: 60,          // バックアップを開始するまでの時間（分）
