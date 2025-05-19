@@ -1,5 +1,3 @@
-// infra/cognito.ts
-
 // Cognitoユーザープールの作成
 export const userPool = new sst.aws.CognitoUserPool("UserPool", {
   
