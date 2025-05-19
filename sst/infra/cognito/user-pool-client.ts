@@ -1,4 +1,5 @@
 import { userPool } from "./user-pool";
+import { appleProviderName } from "./apple-identity-provider"; // Appleプロバイダー名をインポート
 
 // ユーザープールクライアントの作成
 export const userPoolClient = new aws.cognito.UserPoolClient("UserPoolClient", {
@@ -11,14 +12,24 @@ export const userPoolClient = new aws.cognito.UserPoolClient("UserPoolClient", {
     "ALLOW_REFRESH_TOKEN_AUTH",
     "ALLOW_ADMIN_USER_PASSWORD_AUTH"
   ],
-  allowedOauthFlows: ["implicit"],
+  // codeフローを追加（Appleサインインではimplicitよりcodeフローが推奨）
+  allowedOauthFlows: ["implicit", "code"],
   allowedOauthScopes: ["email", "openid", "profile"],
   allowedOauthFlowsUserPoolClient: true,
   callbackUrls: [
     "https://mokokero.com/callback",
-    "http://localhost:3000/callback"
+    "http://localhost:3000/callback",
+    // モバイルアプリ用のURLスキームを追加（必要に応じて変更）
+    "mokokero://callback"
   ],
-  supportedIdentityProviders: ["COGNITO"]
+  logoutUrls: [
+    "https://mokokero.com/logout",
+    "http://localhost:3000/logout",
+    // モバイルアプリ用のURLスキームを追加（必要に応じて変更）
+    "mokokero://logout"
+  ],
+  // Cognitoの組み込み認証とAppleサインインの両方をサポート
+  supportedIdentityProviders: ["COGNITO", appleProviderName]
 });
 
 // クライアントIDをエクスポート

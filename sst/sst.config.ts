@@ -50,6 +50,9 @@ export default $config({
     // Parameter Store設定をインポート
     await import("./infra/parameter_store/apple-provider-params");
 
+    // Apple IDプロバイダー設定をインポート
+    await import("./infra/cognito/apple-identity-provider");
+
     return {
       MyBucket: storage.bucket.name,
       // VPC情報をエクスポート
