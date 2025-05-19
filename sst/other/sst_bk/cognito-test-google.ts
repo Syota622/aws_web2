@@ -1,5 +1,5 @@
-import { vpc } from "../vpc-network";
-import { postgres } from "../aurora";
+import { vpc } from "../../infra/vpc-network";
+import { postgres } from "../../infra/aurora";
 const idPrefix = "my-app-users";
 
 const securityGroup = new aws.ec2.SecurityGroup(
