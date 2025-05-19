@@ -16,11 +16,12 @@ export const userPoolClient = new aws.cognito.UserPoolClient("UserPoolClient", {
   allowedOauthFlows: ["implicit", "code"],
   allowedOauthScopes: ["email", "openid", "profile"],
   allowedOauthFlowsUserPoolClient: true,
+    // "https://mokokero.com/callback",
+    // "http://localhost:3000/callback",
+    // // モバイルアプリ用のURLスキームを追加（必要に応じて変更）
+    // "mokokero://callback"
   callbackUrls: [
-    "https://mokokero.com/callback",
-    "http://localhost:3000/callback",
-    // モバイルアプリ用のURLスキームを追加（必要に応じて変更）
-    "mokokero://callback"
+    "https://mokokero.com"
   ],
   logoutUrls: [
     "https://mokokero.com/logout",
