@@ -47,6 +47,9 @@ export default $config({
     // Auroraバックアップ設定をインポート
     await import("./infra/backup/backup-aurora");
 
+    // Parameter Store設定をインポート
+    await import("./infra/parameter_store/apple-provider-params");
+
     return {
       MyBucket: storage.bucket.name,
       // VPC情報をエクスポート
