@@ -21,7 +21,8 @@ export const userPoolClient = new aws.cognito.UserPoolClient("UserPoolClient", {
     // // モバイルアプリ用のURLスキームを追加（必要に応じて変更）
     // "mokokero://callback"
   callbackUrls: [
-    "https://mokokero.com"
+    "https://mokokero.com",
+    "http://localhost:3000"
   ],
   logoutUrls: [
     "https://mokokero.com/logout",
