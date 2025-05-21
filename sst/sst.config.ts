@@ -41,11 +41,11 @@ export default $config({
     // Aurora設定をインポート
     await import("./infra/aurora");
 
-    // DynamoDBバックアップ設定をインポート
-    await import("./infra/backup/backup-dynamodb");
+    // // DynamoDBバックアップ設定をインポート
+    // await import("./infra/backup/backup-dynamodb");
 
-    // Auroraバックアップ設定をインポート
-    await import("./infra/backup/backup-aurora");
+    // // Auroraバックアップ設定をインポート
+    // await import("./infra/backup/backup-aurora");
 
     // Parameter Store設定をインポート
     await import("./infra/parameter_store/apple-provider-params");
