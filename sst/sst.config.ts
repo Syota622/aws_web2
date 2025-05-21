@@ -38,8 +38,8 @@ export default $config({
     // Remix設定をインポート
     await import("./infra/remix");
 
-    // Aurora設定をインポート
-    await import("./infra/aurora");
+    // // Aurora設定をインポート
+    // await import("./infra/aurora");
 
     // // DynamoDBバックアップ設定をインポート
     // await import("./infra/backup/backup-dynamodb");
