@@ -1,5 +1,5 @@
 import { userPool } from "./user-pool";
-import { appleProviderName } from "./apple-identity-provider"; // Appleプロバイダー名をインポート
+// import { appleProviderName } from "./apple-identity-provider"; // Appleプロバイダー名をインポート
 
 // ユーザープールクライアントの作成
 export const userPoolClient = new aws.cognito.UserPoolClient("UserPoolClient", {
@@ -31,7 +31,8 @@ export const userPoolClient = new aws.cognito.UserPoolClient("UserPoolClient", {
     "mokokero://logout"
   ],
   // Cognitoの組み込み認証とAppleサインインの両方をサポート
-  supportedIdentityProviders: ["COGNITO", appleProviderName]
+  supportedIdentityProviders: ["COGNITO", "SignInWithApple"]
+  // supportedIdentityProviders: ["COGNITO"]
 });
 
 // クライアントIDをエクスポート
