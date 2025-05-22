@@ -31,6 +31,7 @@ export const userPoolClient = new aws.cognito.UserPoolClient("UserPoolClient", {
     "mokokero://logout"
   ],
   // Cognitoの組み込み認証とAppleサインインの両方をサポート
+  // supportedIdentityProviders: ["COGNITO"]
   supportedIdentityProviders: ["COGNITO", "SignInWithApple"]
   // supportedIdentityProviders: ["COGNITO", "appleProviderName"]
 });
