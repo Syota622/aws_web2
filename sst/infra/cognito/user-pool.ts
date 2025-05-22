@@ -60,4 +60,3 @@ export const userPool = new sst.aws.CognitoUserPool("UserPool", {
 
 // Cognitoのリソース情報をエクスポート
 export const userPoolId = userPool.id;
-  
