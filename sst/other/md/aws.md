@@ -34,3 +34,6 @@ aws cognito-idp admin-initiate-auth \
   --client-id YOUR_CLIENT_ID \
   --auth-flow ADMIN_USER_PASSWORD_AUTH \
   --auth-parameters USERNAME=user@example.com,PASSWORD=NewPassword123!
+
+# ソーシャルプロバイダーと外部プロバイダーの注意点
+aws:cognito/identityProvider:IdentityProvider resource 'SignInWithAppleIdentityProvider' has a problem: expected provider_type to be one of ["SAML" "Facebook" "Google" "LoginWithAmazon" "SignInWithApple" "OIDC"], got Apple. Examine values at 'SignInWithAppleIdentityProvider.providerType'.
