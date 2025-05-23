@@ -19,6 +19,9 @@ export const userPool = new sst.aws.CognitoUserPool("UserPool", {
         requireSymbols: true,
         requireUppercase: true
       };
+
+      // 自動検証メッセージ送信を有効化
+      args.autoVerifiedAttributes = ["email"];
       
       // スキーマ定義 (標準属性とカスタム属性)
       args.schemas = [
