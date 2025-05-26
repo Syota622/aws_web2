@@ -9,3 +9,6 @@ Expoのビルドを行うコマンド
 
 - eas build:list --platform ios --profile development
 環境ごとのビルドの一覧を表示するコマンド
+
+- eas build --platform ios --profile production
+- eas submit --platform ios --latest
