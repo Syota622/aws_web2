@@ -11,16 +11,19 @@
 インフラのコードを管理しています。
 
 # cdk
-CDKのコードを管理しています。
+CDKのコードを管理しています。typescriptで記述しています。
 
 # html
 HTMLのコードを管理しています。
 
 # pulumi
-Pulumiのコードを管理しています。
+Pulumiのコードを管理しています。typescriptで記述しています。
 
 # remix
 Remixのコードを管理しています。
 
 # sst
 SSTのコードを管理しています。
+
+# md
+Markdownのコードを管理しています。
