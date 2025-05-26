@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 # git check-pick
 
 ```log
@@ -46,4 +44,3 @@ git checkout qa
 git pull origin qa
 git log --oneline -5
 ```
->>>>>>> f3dac79 (Merge pull request #11 from Syota622/feature/test)
