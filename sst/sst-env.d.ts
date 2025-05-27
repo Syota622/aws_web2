@@ -29,10 +29,6 @@ declare module "sst" {
       "id": string
       "type": "sst.aws.CognitoUserPool"
     }
-    "expo-code-pipeline-artifact-bucket-dev": {
-      "name": string
-      "type": "sst.aws.Bucket"
-    }
     "expo-code-pipeline-artifact-store-dev": {
       "name": string
       "type": "sst.aws.Bucket"

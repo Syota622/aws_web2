@@ -1,5 +1,6 @@
 const idPrefix = "expo-code-pipeline";
 
+// CodePipelineサービスロール
 export const codePipelineExpoRole = new aws.iam.Role(
   `${idPrefix}-role-${process.env.SST_STAGE || "dev"}`,
   {
@@ -34,6 +35,7 @@ export const codePipelineExpoRole = new aws.iam.Role(
   }
 );
 
+// アーティファクトストアバケット
 export const artifactBucket = new sst.aws.Bucket(
   `${idPrefix}-artifact-store-${process.env.SST_STAGE || "dev"}`,
   {
