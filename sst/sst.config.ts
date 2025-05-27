@@ -53,6 +53,9 @@ export default $config({
     // Apple IDプロバイダー設定をインポート
     await import("./infra/cognito/apple-identity-provider");
 
+    // Expo Code Pipeline設定をインポート
+    await import("./infra/pipline/expo_code_pipline");
+
     return {
       MyBucket: storage.bucket.name,
       // VPC情報をエクスポート

@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo "Installing EAS CLI..."
+      - npm install -g eas-cli
+      - echo "Installing project dependencies..."
+      - npm ci
+      
+  pre_build:
+    commands:
+      - echo "Getting EAS token..."
+      - export EXPO_TOKEN=$(aws ssm get-parameter --name "/dev/expo/eas-token" --with-decryption --query 'Parameter.Value' --output text --region ap-northeast-1)
+      - echo "Logging in to EAS..."
+      - eas whoami
+      
+  build:
+    commands:
+      - echo "Starting iOS build..."
+      - eas build --platform ios --profile production --non-interactive --no-wait
+      
+  post_build:
+    commands:
+      - echo "Build triggered successfully!"
+      - eas build:list --platform ios --limit 1
