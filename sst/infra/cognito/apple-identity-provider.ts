@@ -52,7 +52,7 @@ export const appleIdentityProvider = userPool.addIdentityProvider(
       team_id: teamId.value,
       key_id: keyId.value,
       private_key: privateKey.value,
-      authorize_scopes: "name email"
+      authorize_scopes: "profile name email"
     },
     attributes: {
       email: "email",
@@ -69,7 +69,7 @@ export const appleIdentityProvider = userPool.addIdentityProvider(
           team_id: teamId.value,
           key_id: keyId.value,
           private_key: privateKey.value,
-          authorize_scopes: "name email"
+          authorize_scopes: "profile name email"
         }
       }
     }
