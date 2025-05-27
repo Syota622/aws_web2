@@ -43,6 +43,9 @@ const privateKey = aws.ssm.getParameterOutput({
 // });
 
 // プロバイダー名をエクスポート（コーディング方法が色々ある）
+// authorize_scopesは、nameとemailのみ。他のものを指定するとエラーになるため注意
+// &scope=profile%20name%20email
+// これは profile name email というスコープを指定していますが、Apple ID では profile と name は別々のスコープとして扱われません。
 export const appleIdentityProvider = userPool.addIdentityProvider(
   `apple-provider-signin-with-apple-${process.env.SST_STAGE || 'dev'}`,
   {
