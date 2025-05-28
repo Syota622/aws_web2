@@ -31,11 +31,11 @@ ignoredBuiltDependencies:
 ## エラーが発生した場合の対応方法
 キャッシュを削除して再インストール
 - rm -rf .sst
-- pnpm sst diff --stage dev
-  - 実行すると自動的に.sstディレクトリが作成される
 - rm -rf node_modules
 - pnpm install
   - 実行すると自動的にnode_modulesディレクトリが作成される
+- pnpm sst diff --stage dev
+  - 実行すると自動的に.sstディレクトリが作成される
 
 # コマンド実行結果例
 ```sh
