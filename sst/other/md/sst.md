@@ -18,6 +18,9 @@ https://sst.dev/docs/console/
 - pnpm store prune(パッケージのキャッシュを削除)
 - pnpm sst state export --stage dev（ステータスのエクスポート）
 - sst state export --stage dev | grep "urn:"（ステータスのエクスポートからリソースのURNを取得）
+- pnpm sst telemetry （テレメトリーの有効化）
+- pnpm sst telemetry disable（テレメトリーの無効化）
+- pnpm sst unlock（ロックファイルを削除）
 
 - pnpm approve-build(ビルドを承認)
 ```yml
