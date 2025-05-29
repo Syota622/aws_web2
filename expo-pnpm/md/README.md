@@ -6,6 +6,3 @@ Expoへのビルドを行う。--no-waitをつけるとビルドが完了する�
 
 - eas build --platform ios --profile development --local --non-interactive
 上記同様
-
-- eas build --platform ios --profile production --non-interactive --auto-submit
-非対話的にビルドを行った後に、TestFlightにビルドを送信する。

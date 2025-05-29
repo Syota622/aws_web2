@@ -15,3 +15,6 @@ TestFlightに提出するためのビルドを作成するコマンド
 
 - eas submit --platform ios --latest
 TestFlightに提出するコマンド
+
+- eas build --platform ios --profile production --non-interactive
+非対話でビルドを実施するコマンド
