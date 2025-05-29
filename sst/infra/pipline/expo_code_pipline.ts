@@ -132,37 +132,37 @@ export const artifactBucket = new sst.aws.Bucket(
   }
 );
 
-// const expoCodeDeploy = new aws.codebuild.Project(
-//   `${idPrefix}-${process.env.SST_STAGE || "dev"}`,
-//   {
-//     name: `${idPrefix}-${process.env.SST_STAGE || "dev"}`,
-//     serviceRole: codeBuildExpoRole.arn,
-//     artifacts: {
-//       type: "CODEPIPELINE",
-//     },
-//     environment: {
-//       computeType: "BUILD_GENERAL1_SMALL",
-//       image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0",
-//       type: "ARM_CONTAINER",
-//       environmentVariables: [
-//         {
-//           name: "region",
-//           type: "PLAINTEXT",
-//           value: "ap-northeast-1",
-//         },
-//         {
-//           name: "stage",
-//           type: "PLAINTEXT",
-//           value: process.env.SST_STAGE || "dev",
-//         }
-//       ]
-//     },
-//     source: {
-//       type: "CODEPIPELINE",
-//       buildspec: "cicd/expo-deploy.yml"
-//     }
-//   }
-// );
+const expoCodeDeploy = new aws.codebuild.Project(
+  `${idPrefix}-${process.env.SST_STAGE || "dev"}`,
+  {
+    name: `${idPrefix}-${process.env.SST_STAGE || "dev"}`,
+    serviceRole: codeBuildExpoRole.arn,
+    artifacts: {
+      type: "CODEPIPELINE",
+    },
+    environment: {
+      computeType: "BUILD_GENERAL1_SMALL",
+      image: "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
+      type: "ARM_CONTAINER",
+      environmentVariables: [
+        {
+          name: "region",
+          type: "PLAINTEXT",
+          value: "ap-northeast-1",
+        },
+        {
+          name: "stage",
+          type: "PLAINTEXT",
+          value: process.env.SST_STAGE || "dev",
+        }
+      ]
+    },
+    source: {
+      type: "CODEPIPELINE",
+      buildspec: "cicd/expo-deploy.yml"
+    }
+  }
+);
 
 // const expoCodePipeline = new aws.codepipeline.Pipeline(
 //   `${idPrefix}-${process.env.SST_STAGE || "dev"}`,
