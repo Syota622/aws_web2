@@ -4,5 +4,8 @@ Expoへのビルドを行う。--localをつけるとローカルでビルドを
 - eas build --platform all --profile production --non-interactive --no-wait
 Expoへのビルドを行う。--no-waitをつけるとビルドが完了するまで待たない。
 
-- eas build --platform ios --profile develop --local --non-interactive
+- eas build --platform ios --profile development --local --non-interactive
 上記同様
+
+- eas build --platform ios --profile production --non-interactive --auto-submit
+非対話的にビルドを行った後に、TestFlightにビルドを送信する。
