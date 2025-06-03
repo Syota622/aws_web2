@@ -30,3 +30,7 @@ TestFlight提出時に対象のidを指定するコマンド
 
 - eas build:list --platform ios --limit 10
 ビルドの一覧を表示するコマンド
+
+- rm -rf ~/.app-store/auth/
+- eas credentials --platform ios
+Apple認証情報のクリア
