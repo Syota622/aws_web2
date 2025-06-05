@@ -1,3 +1,4 @@
 /html
 .env
 *.p8
+/*/DistCert_*
