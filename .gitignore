@@ -2,3 +2,4 @@
 .env
 *.p8
 /*/DistCert_*
+ios/
