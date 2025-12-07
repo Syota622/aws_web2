@@ -2,4 +2,8 @@
 .env
 *.p8
 /*/DistCert_*
+
 ios/
+# CounterApp/ios/ 配下の全ファイル・フォルダを無視
+CounterApp/ios/*
+!CounterApp/ios/.gitkeep
