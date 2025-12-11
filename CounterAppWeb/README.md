@@ -60,3 +60,23 @@ FROM
 WHERE t1.event_name = 'button_press_test' AND t2.key = 'performance_id'
 ORDER BY t1.event_timestamp DESC;
 ```
+
+## 特定のキーを取得
+```sql
+SELECT
+  t.event_name,
+  MAX(CASE WHEN param.key = 'performance_id' THEN param.value.string_value END)
+    AS performance_id,
+  MAX(
+    CASE WHEN param.key = 'performance_name' THEN param.value.string_value END)
+    AS performance_name
+FROM
+  `counterapp-1bb9e`.`analytics_515965369`.`events_intraday_20251211` AS t,
+  UNNEST(t.event_params) AS param
+WHERE t.event_name LIKE '%button_press%'
+GROUP BY
+  t.event_name,
+  t.event_timestamp  -- Include event_timestamp in GROUP BY to ensure distinct rows for each original event
+ORDER BY t.event_timestamp DESC
+LIMIT 30;
+```
