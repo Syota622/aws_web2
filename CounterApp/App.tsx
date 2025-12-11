@@ -23,7 +23,7 @@ function App(): React.JSX.Element {
         return;
       }
 
-      await analytics().logEvent('button_press', {
+      await analytics().logEvent('button_press_ios', {
         count: newCount,
         timestamp: new Date().toISOString(),
       });
@@ -44,7 +44,7 @@ function App(): React.JSX.Element {
         return;
       }
 
-      await analytics().logEvent('counter_reset', {
+      await analytics().logEvent('counter_reset_ios', {
         previous_count: count,
         timestamp: new Date().toISOString(),
       });
