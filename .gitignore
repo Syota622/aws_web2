@@ -8,3 +8,7 @@ ios/
 CounterApp/ios/*
 CounterApp/ios/.*
 !CounterApp/ios/.gitkeep
+
+CounterAppWeb/node_modules/*
+CounterAppWeb/node_modules/.*
+!CounterAppWeb/node_modules/.gitkeep 
