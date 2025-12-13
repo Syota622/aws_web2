@@ -9,6 +9,10 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import analytics from '@react-native-firebase/analytics';
 import app from '@react-native-firebase/app';
 
+// 公演データ（ハードコーディング）
+const PERFORMANCE_ID = "performance_001";
+const PERFORMANCE_NAME = "東京";
+
 function App(): React.JSX.Element {
   const [count, setCount] = useState(0);
 
@@ -23,9 +27,11 @@ function App(): React.JSX.Element {
         return;
       }
 
-      await analytics().logEvent('button_press_ios', {
+      await analytics().logEvent(`press_ios_${PERFORMANCE_ID}`, {
         count: newCount,
         timestamp: new Date().toISOString(),
+        performance_id: PERFORMANCE_ID,
+        performance_name: PERFORMANCE_NAME,
       });
 
       console.log(`カウント: ${newCount} - Analyticsに送信しました`);
@@ -44,9 +50,11 @@ function App(): React.JSX.Element {
         return;
       }
 
-      await analytics().logEvent('counter_reset_ios', {
+      await analytics().logEvent(`reset_ios_${PERFORMANCE_ID}`, {
         previous_count: count,
         timestamp: new Date().toISOString(),
+        performance_id: PERFORMANCE_ID,
+        performance_name: PERFORMANCE_NAME,
       });
 
       console.log('リセット - Analyticsに送信しました');
