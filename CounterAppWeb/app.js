@@ -1,9 +1,17 @@
 import { initializeApp } from 'firebase/app';
 import { getAnalytics, logEvent } from 'firebase/analytics';
 
-// 公演データ（ハードコーディング）
-const PERFORMANCE_ID = "performance_003";
-const PERFORMANCE_NAME = "横浜";
+// 公演データ（ランダムに設定）
+const performances = [
+  { id: "performance_001", name: "東京" },
+  { id: "performance_002", name: "大阪" },
+  { id: "performance_003", name: "横浜" },
+  { id: "performance_004", name: "名古屋" }
+];
+const randomPerformance = performances[0];
+const PERFORMANCE_ID = randomPerformance.id;
+const PERFORMANCE_NAME = randomPerformance.name;
+console.log(`選択された公演: ${PERFORMANCE_NAME} (${PERFORMANCE_ID})`);
 
 // 認証情報設定
 

@@ -9,9 +9,17 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import analytics from '@react-native-firebase/analytics';
 import app from '@react-native-firebase/app';
 
-// 公演データ（ハードコーディング）
-const PERFORMANCE_ID = "performance_001";
-const PERFORMANCE_NAME = "東京";
+// 公演データをランダムに設定
+const performances = [
+  { id: "performance_001", name: "東京" },
+  { id: "performance_002", name: "大阪" },
+  { id: "performance_003", name: "横浜" },
+  { id: "performance_004", name: "名古屋" }
+];
+const randomPerformance = performances[0];
+const PERFORMANCE_ID = randomPerformance.id;
+const PERFORMANCE_NAME = randomPerformance.name;
+console.log(`公演ID: ${PERFORMANCE_ID}, 公演名: ${PERFORMANCE_NAME}`); 
 
 function App(): React.JSX.Element {
   const [count, setCount] = useState(0);
