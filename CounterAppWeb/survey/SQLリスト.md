@@ -80,3 +80,53 @@ GROUP BY
 ORDER BY t.event_timestamp DESC
 LIMIT 30;
 ```
+
+## 公演名と公演IDを取得
+```sql
+SELECT
+  t1.event_name,
+  FORMAT_TIMESTAMP('%Y-%m-%d %H:%M:%S', TIMESTAMP_MICROS(t1.event_timestamp))
+    AS formatted_event_timestamp,  -- event_timestampを年月日時分秒形式に変換 (デフォルトはUTC)
+  t2.value.string_value AS performance_name,
+  t2.value.string_value AS performance_id
+FROM
+  `counterapp-1bb9e`.`analytics_515965369`.`events_intraday_*` AS t1,
+  UNNEST(t1.event_params) AS t2
+WHERE 
+  (t.event_name LIKE '%performance%')
+    OR
+  _TABLE_SUFFIX BETWEEN '20251211' AND '20251214'
+ORDER BY t1.event_timestamp DESC;
+```
+
+# key value取得
+```sql
+SELECT 
+  event_date,
+  event_name,
+  (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_id') AS performance_id,
+  (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_name') AS performance_name
+FROM 
+  `counterapp-1bb9e.analytics_515965369.events_intraday_*` AS t1
+WHERE 
+  (_TABLE_SUFFIX BETWEEN '20251211' AND '20251214')
+  AND t1.event_name LIKE '%performance%'
+LIMIT 3
+```
+
+```sql
+SELECT 
+  event_date,
+  event_name,
+  MAX(IF(ep.key = 'performance_id', ep.value.string_value, NULL)) AS performance_id,
+  MAX(IF(ep.key = 'performance_name', ep.value.string_value, NULL)) AS performance_name
+FROM 
+  `counterapp-1bb9e.analytics_515965369.events_intraday_*` AS t1,
+  UNNEST(event_params) AS ep
+WHERE 
+  (_TABLE_SUFFIX BETWEEN '20251211' AND '20251214')
+  AND t1.event_name LIKE '%performance%'
+GROUP BY 
+  event_date, event_name, event_timestamp
+LIMIT 3
+```
