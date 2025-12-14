@@ -16,13 +16,19 @@ const performances = [
   { id: "performance_003", name: "横浜" },
   { id: "performance_004", name: "名古屋" }
 ];
-const randomPerformance = performances[0];
-const PERFORMANCE_ID = randomPerformance.id;
-const PERFORMANCE_NAME = randomPerformance.name;
-console.log(`公演ID: ${PERFORMANCE_ID}, 公演名: ${PERFORMANCE_NAME}`); 
+
+// ランダムな公演を取得する関数
+const getRandomPerformance = () => {
+  return performances[Math.floor(Math.random() * performances.length)];
+};
 
 function App(): React.JSX.Element {
   const [count, setCount] = useState(0);
+  const [performance, setPerformance] = useState(() => {
+    const randomPerformance = getRandomPerformance();
+    console.log(`公演ID: ${randomPerformance.id}, 公演名: ${randomPerformance.name}`);
+    return randomPerformance;
+  });
 
   const handleIncrement = async () => {
     const newCount = count + 1;
@@ -35,11 +41,11 @@ function App(): React.JSX.Element {
         return;
       }
 
-      await analytics().logEvent(`press_ios_${PERFORMANCE_ID}`, {
+      await analytics().logEvent(`press_ios_${performance.id}`, {
         count: newCount,
         timestamp: new Date().toISOString(),
-        performance_id: PERFORMANCE_ID,
-        performance_name: PERFORMANCE_NAME,
+        performance_id: performance.id,
+        performance_name: performance.name,
       });
 
       console.log(`カウント: ${newCount} - Analyticsに送信しました`);
@@ -49,7 +55,13 @@ function App(): React.JSX.Element {
   };
 
   const handleReset = async () => {
+    const previousCount = count;
     setCount(0);
+    
+    // 公演IDと公演名をリセット（新しいランダムな値を設定）
+    const newPerformance = getRandomPerformance();
+    setPerformance(newPerformance);
+    console.log(`リセット - 新しい公演ID: ${newPerformance.id}, 公演名: ${newPerformance.name}`);
 
     try {
       // Firebase Appが初期化されているか確認
@@ -58,11 +70,11 @@ function App(): React.JSX.Element {
         return;
       }
 
-      await analytics().logEvent(`reset_ios_${PERFORMANCE_ID}`, {
-        previous_count: count,
+      await analytics().logEvent(`reset_ios_${newPerformance.id}`, {
+        previous_count: previousCount,
         timestamp: new Date().toISOString(),
-        performance_id: PERFORMANCE_ID,
-        performance_name: PERFORMANCE_NAME,
+        performance_id: newPerformance.id,
+        performance_name: newPerformance.name,
       });
 
       console.log('リセット - Analyticsに送信しました');
@@ -94,6 +106,8 @@ function App(): React.JSX.Element {
         <Text style={styles.info}>
           ボタンを押すとFirebase Analyticsに{'\n'}イベントが送信されます
         </Text>
+
+        <Text style={styles.info}>公演ID: {performance.id}, 公演名: {performance.name}</Text>
       </View>
     </SafeAreaView>
   );

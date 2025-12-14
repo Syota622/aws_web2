@@ -8,9 +8,16 @@ const performances = [
   { id: "performance_003", name: "横浜" },
   { id: "performance_004", name: "名古屋" }
 ];
-const randomPerformance = performances[0];
-const PERFORMANCE_ID = randomPerformance.id;
-const PERFORMANCE_NAME = randomPerformance.name;
+
+// ランダムな公演を取得する関数
+const getRandomPerformance = () => {
+  return performances[Math.floor(Math.random() * performances.length)];
+};
+
+// 初期公演を設定
+let currentPerformance = getRandomPerformance();
+let PERFORMANCE_ID = currentPerformance.id;
+let PERFORMANCE_NAME = currentPerformance.name;
 console.log(`選択された公演: ${PERFORMANCE_NAME} (${PERFORMANCE_ID})`);
 
 // 認証情報設定
@@ -38,6 +45,13 @@ document.getElementById('reset').onclick = () => {
   const prev = count;
   count = 0;
   document.getElementById('count').textContent = count;
+  
+  // 公演IDと公演名をリセット（新しいランダムな値を設定）
+  currentPerformance = getRandomPerformance();
+  PERFORMANCE_ID = currentPerformance.id;
+  PERFORMANCE_NAME = currentPerformance.name;
+  console.log(`リセット - 新しい公演: ${PERFORMANCE_NAME} (${PERFORMANCE_ID})`);
+  
   logEvent(analytics, `reset_${PERFORMANCE_ID}`, { 
     previous_count: prev,
     performance_id: PERFORMANCE_ID,
