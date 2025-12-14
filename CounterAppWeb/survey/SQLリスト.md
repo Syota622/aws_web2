@@ -9,28 +9,6 @@ ORDER BY event_timestamp DESC
 LIMIT 30;
 ```
 
-## 公演id出現回数
-```sql
-SELECT
-  t2.value.string_value AS performance_id,
-  COUNT(t2.value.string_value) AS count_of_performance_id
-FROM
-  `counterapp-1bb9e`.`analytics_515965369`.`events_intraday_20251211` AS t1,
-  UNNEST(t1.event_params) AS t2
-WHERE t1.event_name = 'button_press_test' AND t2.key = 'performance_id'
-GROUP BY performance_id
-ORDER BY count_of_performance_id DESC;
-```
-## 公演id取得
-```sql
-SELECT
-  t1.event_name, t1.event_timestamp, t2.value.string_value AS performance_id
-FROM
-  `counterapp-1bb9e`.`analytics_515965369`.`events_intraday_20251211` AS t1,
-  UNNEST(t1.event_params) AS t2
-WHERE t1.event_name = 'button_press_test' AND t2.key = 'performance_id'
-ORDER BY t1.event_timestamp DESC;
-```
 ## timestamp 変換
 ```sql
 SELECT
@@ -50,83 +28,236 @@ WHERE t1.event_name = 'button_press_test' AND t2.key = 'performance_id'
 ORDER BY t1.event_timestamp DESC;
 ```
 
-## 公演ごとの出現回数
-```sql
-SELECT
-  t1.event_name, t1.event_timestamp, t2.value.string_value AS performance_id
-FROM
-  `counterapp-1bb9e`.`analytics_515965369`.`events_intraday_20251211` AS t1,
-  UNNEST(t1.event_params) AS t2
-WHERE t1.event_name = 'button_press_test' AND t2.key = 'performance_id'
-ORDER BY t1.event_timestamp DESC;
-```
-
-## 特定のキーを取得
-```sql
-SELECT
-  t.event_name,
-  MAX(CASE WHEN param.key = 'performance_id' THEN param.value.string_value END)
-    AS performance_id,
-  MAX(
-    CASE WHEN param.key = 'performance_name' THEN param.value.string_value END)
-    AS performance_name
-FROM
-  `counterapp-1bb9e`.`analytics_515965369`.`events_intraday_20251211` AS t,
-  UNNEST(t.event_params) AS param
-WHERE t.event_name LIKE '%button_press%'
-GROUP BY
-  t.event_name,
-  t.event_timestamp  -- Include event_timestamp in GROUP BY to ensure distinct rows for each original event
-ORDER BY t.event_timestamp DESC
-LIMIT 30;
-```
-
-## 公演名と公演IDを取得
-```sql
-SELECT
-  t1.event_name,
-  FORMAT_TIMESTAMP('%Y-%m-%d %H:%M:%S', TIMESTAMP_MICROS(t1.event_timestamp))
-    AS formatted_event_timestamp,  -- event_timestampを年月日時分秒形式に変換 (デフォルトはUTC)
-  t2.value.string_value AS performance_name,
-  t2.value.string_value AS performance_id
-FROM
-  `counterapp-1bb9e`.`analytics_515965369`.`events_intraday_*` AS t1,
-  UNNEST(t1.event_params) AS t2
-WHERE 
-  (t.event_name LIKE '%performance%')
-    OR
-  _TABLE_SUFFIX BETWEEN '20251211' AND '20251214'
-ORDER BY t1.event_timestamp DESC;
-```
-
 # key value取得
 ```sql
 SELECT 
   event_date,
   event_name,
   (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_id') AS performance_id,
-  (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_name') AS performance_name
+  (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_name') AS performance_name,
+  (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'timestamp') AS timestamp
 FROM 
   `counterapp-1bb9e.analytics_515965369.events_intraday_*` AS t1
 WHERE 
   (_TABLE_SUFFIX BETWEEN '20251211' AND '20251214')
   AND t1.event_name LIKE '%performance%'
-LIMIT 3
 ```
 
+
+# eventごとのカウント数
 ```sql
 SELECT 
-  event_date,
   event_name,
-  MAX(IF(ep.key = 'performance_id', ep.value.string_value, NULL)) AS performance_id,
-  MAX(IF(ep.key = 'performance_name', ep.value.string_value, NULL)) AS performance_name
+  (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_id') AS performance_id,
+  (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_name') AS performance_name,
+  COUNT(*) AS event_count
 FROM 
-  `counterapp-1bb9e.analytics_515965369.events_intraday_*` AS t1,
-  UNNEST(event_params) AS ep
+  `counterapp-1bb9e.analytics_515965369.events_intraday_*` AS t1
 WHERE 
   (_TABLE_SUFFIX BETWEEN '20251211' AND '20251214')
   AND t1.event_name LIKE '%performance%'
 GROUP BY 
-  event_date, event_name, event_timestamp
-LIMIT 3
+  event_name,
+  performance_id,
+  performance_name
+ORDER BY 
+  event_count DESC
+```
+
+# 公演ごとのカウント数
+## 1時間ごと
+```sql
+SELECT 
+  TIMESTAMP_TRUNC(
+    PARSE_TIMESTAMP('%Y-%m-%dT%H:%M:%E*SZ', (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'timestamp')),
+    HOUR
+  ) AS hour,
+  event_name,
+  (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_id') AS performance_id,
+  (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_name') AS performance_name,
+  COUNT(*) AS event_count
+FROM 
+  `counterapp-1bb9e.analytics_515965369.events_intraday_*` AS t1
+WHERE 
+  (_TABLE_SUFFIX BETWEEN '20251211' AND '20251214')
+  AND t1.event_name LIKE '%performance%'
+GROUP BY 
+  hour,
+  event_name,
+  performance_id,
+  performance_name
+ORDER BY 
+  hour,
+  event_name
+```
+
+## 10分ごと
+```sql
+SELECT 
+  TIMESTAMP_SECONDS(
+    DIV(
+      UNIX_SECONDS(PARSE_TIMESTAMP('%Y-%m-%dT%H:%M:%E*SZ', (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'timestamp'))),
+      600
+    ) * 600
+  ) AS timestamp_10min_utc,
+  FORMAT_TIMESTAMP(
+    '%Y-%m-%d %H:%M',
+    TIMESTAMP_SECONDS(
+      DIV(
+        UNIX_SECONDS(PARSE_TIMESTAMP('%Y-%m-%dT%H:%M:%E*SZ', (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'timestamp'))),
+        600
+      ) * 600
+    ),
+    'Asia/Tokyo'
+  ) AS time_10min_jst,
+  event_name,
+  (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_id') AS performance_id,
+  (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_name') AS performance_name,
+  COUNT(*) AS event_count
+FROM 
+  `counterapp-1bb9e.analytics_515965369.events_intraday_*` AS t1
+WHERE 
+  (_TABLE_SUFFIX BETWEEN '20251211' AND '20251214')
+  AND t1.event_name LIKE '%performance%'
+GROUP BY 
+  timestamp_10min_utc,
+  time_10min_jst,
+  event_name,
+  performance_id,
+  performance_name
+ORDER BY 
+  timestamp_10min_utc,
+  event_name
+```
+
+# ダッシュボード化時のクエリ
+```sql
+SELECT 
+  timestamp_10min,
+  time_label_jst,
+  event_name,
+  performance_id,
+  performance_name,
+  event_count
+FROM (
+  SELECT 
+    TIMESTAMP_SECONDS(
+      DIV(
+        UNIX_SECONDS(PARSE_TIMESTAMP('%Y-%m-%dT%H:%M:%E*SZ', (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'timestamp'))),
+        600
+      ) * 600
+    ) AS timestamp_10min,
+    FORMAT_TIMESTAMP(
+      '%Y-%m-%d %H:%M',
+      TIMESTAMP_SECONDS(
+        DIV(
+          UNIX_SECONDS(PARSE_TIMESTAMP('%Y-%m-%dT%H:%M:%E*SZ', (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'timestamp'))),
+          600
+        ) * 600
+      ),
+      'Asia/Tokyo'
+    ) AS time_label_jst,
+    event_name,
+    (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_id') AS performance_id,
+    (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_name') AS performance_name,
+    COUNT(*) AS event_count
+  FROM 
+    `counterapp-1bb9e.analytics_515965369.events_intraday_*`
+  WHERE 
+    event_name LIKE '%performance%'
+    AND (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'timestamp') IS NOT NULL
+  GROUP BY 
+    timestamp_10min,
+    time_label_jst,
+    event_name,
+    performance_id,
+    performance_name
+)
+ORDER BY
+  timestamp_10min
+```
+
+# 1秒、1分、10分
+```sql
+SELECT 
+  timestamp_1sec,
+  time_label_1sec_jst,
+  timestamp_1min,
+  time_label_1min_jst,
+  timestamp_10min,
+  time_label_10min_jst,
+  event_name,
+  performance_id,
+  performance_name,
+  event_count
+FROM (
+  SELECT 
+    -- 1秒
+    TIMESTAMP_SECONDS(
+      UNIX_SECONDS(PARSE_TIMESTAMP('%Y-%m-%dT%H:%M:%E*SZ', (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'timestamp')))
+    ) AS timestamp_1sec,
+    FORMAT_TIMESTAMP(
+      '%Y-%m-%d %H:%M:%S',
+      PARSE_TIMESTAMP('%Y-%m-%dT%H:%M:%E*SZ', (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'timestamp')),
+      'Asia/Tokyo'
+    ) AS time_label_1sec_jst,
+    
+    -- 1分
+    TIMESTAMP_SECONDS(
+      DIV(
+        UNIX_SECONDS(PARSE_TIMESTAMP('%Y-%m-%dT%H:%M:%E*SZ', (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'timestamp'))),
+        60
+      ) * 60
+    ) AS timestamp_1min,
+    FORMAT_TIMESTAMP(
+      '%Y-%m-%d %H:%M',
+      TIMESTAMP_SECONDS(
+        DIV(
+          UNIX_SECONDS(PARSE_TIMESTAMP('%Y-%m-%dT%H:%M:%E*SZ', (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'timestamp'))),
+          60
+        ) * 60
+      ),
+      'Asia/Tokyo'
+    ) AS time_label_1min_jst,
+    
+    -- 10分
+    TIMESTAMP_SECONDS(
+      DIV(
+        UNIX_SECONDS(PARSE_TIMESTAMP('%Y-%m-%dT%H:%M:%E*SZ', (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'timestamp'))),
+        600
+      ) * 600
+    ) AS timestamp_10min,
+    FORMAT_TIMESTAMP(
+      '%Y-%m-%d %H:%M',
+      TIMESTAMP_SECONDS(
+        DIV(
+          UNIX_SECONDS(PARSE_TIMESTAMP('%Y-%m-%dT%H:%M:%E*SZ', (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'timestamp'))),
+          600
+      ) * 600
+      ),
+      'Asia/Tokyo'
+    ) AS time_label_10min_jst,
+    
+    event_name,
+    (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_id') AS performance_id,
+    (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'performance_name') AS performance_name,
+    COUNT(*) AS event_count
+  FROM 
+    `counterapp-1bb9e.analytics_515965369.events_intraday_*`
+  WHERE 
+    event_name LIKE '%performance%'
+    AND (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'timestamp') IS NOT NULL
+  GROUP BY 
+    timestamp_1sec,
+    time_label_1sec_jst,
+    timestamp_1min,
+    time_label_1min_jst,
+    timestamp_10min,
+    time_label_10min_jst,
+    event_name,
+    performance_id,
+    performance_name
+)
+ORDER BY
+  timestamp_1sec
 ```
